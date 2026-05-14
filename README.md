@@ -1,2 +1,1 @@
-# mihua
-米花助手 - 南景村智慧村务管理
+mihua helper
