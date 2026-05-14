@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="米花助手">
+  <meta name="theme-color" content="#1989fa">
+  <title>米花助手 - 南景村智慧村务</title>
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi6LSf6byt5W6I5aW9Iiwic2hvcnRfbmFtZSI6IumbiVyIsImRlc2NyaXB0aW9uIjoi5Y2B5Zu96KeE5p6Q5pm+5Yy656uZ5p6R5Yy56Z2kIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmN2Y4ZmEiLCJ0aGVtZV9jb2xvciI6IiMxOTg5ZmEiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ3JlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIHJ4PScyMCcgZmlsbD0nJTIzMTk4OWZhJy8lM0UlM0NwYXRoIGQ9J00zMCA2NUw1MCAzNUw3MCA2NScgc3Ryb2tlPSd3aGl0ZScgc3Ryb2tlLXdpZHRoPSc4JyBmaWxsPSdub25lJyBzdHJva2UtbGluZWNhcD0ncm91bmQnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnLyUzRSUzQ2NpcmNsZSBjeD0nNTAnIGN5PSczNScgcj0nMTAnIGZpbGw9J3doaXRlJy8lM0UlM0N0ZXh0IHg9JzUwJyB5PSczOCcgZm9udC1zaXplPScyNScgZmlsbD0nJTIzMTk4OWZhJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJz7ilZHimJYnJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJzaXplcyI6IjUxMng1MTIifV19">
+  <link rel="stylesheet" href="https://unpkg.com/vant@4/lib/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@vant/icons@4.0.0/assets/iconfont.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #f7f8fa; color: #333; min-height: 100vh; overflow-x: hidden; }
+    #app { min-height: 100vh; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .page-container { padding-bottom: 60px; min-height: 100vh; background: #f7f8fa; }
+    .card { background: #fff; border-radius: 12px; padding: 16px; margin: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .tag-likepoor { background: #e6f7ff; color: #1989fa; }
+    .tag-monitor { background: #fff9e6; color: #fa8c16; }
+    .tag-party { background: #f6ffed; color: #52c41a; }
+    .tag-lowincome { background: #fff1f0; color: #ff4d4f; }
+    .tag-special { background: #fef0ff; color: #722ed1; }
+    .tag-elderly { background: #e6fffb; color: #13c2c2; }
+    .tag-child { background: #fff0f6; color: #eb2f96; }
+    .tag-holder { background: #fff7e6; color: #fa8c16; }
+    .tag-normal { background: #f5f5f5; color: #666; }
+
+    .lock-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; }
+    .lock-logo { margin-bottom: 60px; text-align: center; }
+    .lock-logo h1 { color: #fff; font-size: 36px; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 8px; }
+    .lock-logo p { color: rgba(255,255,255,0.8); font-size: 14px; }
+    .lock-logo .icon { font-size: 64px; margin-bottom: 16px; }
+    .lock-form { width: 280px; }
+    .lock-input { width: 100%; height: 48px; border: none; border-radius: 24px; padding: 0 20px; font-size: 16px; text-align: center; background: rgba(255,255,255,0.95); color: #333; outline: none; margin-bottom: 16px; }
+    .lock-input::placeholder { color: #999; }
+    .lock-btn { width: 100%; height: 48px; border: none; border-radius: 24px; background: rgba(255,255,255,0.95); color: #1989fa; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+    .lock-btn:active { transform: scale(0.98); }
+    .lock-error { color: #fff; text-align: center; margin-top: 12px; font-size: 14px; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+    .lock-hint { position: fixed; bottom: 40px; color: rgba(255,255,255,0.6); font-size: 12px; }
+
+    .login-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; }
+    .login-card { width: 300px; background: #fff; border-radius: 16px; padding: 30px 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .login-title { text-align: center; margin-bottom: 24px; }
+    .login-title h2 { font-size: 22px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .login-title p { font-size: 13px; color: #999; }
+    .login-input { width: 100%; height: 48px; border: 1px solid #e8e8e8; border-radius: 24px; padding: 0 16px; font-size: 15px; outline: none; margin-bottom: 12px; transition: border-color 0.2s; }
+    .login-input:focus { border-color: #1989fa; }
+    .login-btn { width: 100%; height: 48px; border: none; border-radius: 24px; background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: transform 0.2s; }
+    .login-btn:active { transform: scale(0.98); }
+    .login-error { color: #ff4d4f; text-align: center; margin-top: 12px; font-size: 13px; }
+    .login-logo { font-size: 48px; margin-bottom: 16px; }
+
+    .home-header { background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); color: #fff; padding: 20px 16px 24px; border-radius: 0 0 20px 20px; }
+    .home-header h1 { font-size: 22px; font-weight: 600; margin-bottom: 2px; }
+    .home-header .date-time { font-size: 12px; opacity: 0.9; }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; margin-top: -16px; }
+    .stat-card { background: #fff; border-radius: 12px; padding: 14px 10px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .stat-card .stat-num { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .stat-card .stat-label { font-size: 12px; color: #666; }
+    .stat-card.blue .stat-num { color: #1989fa; }
+    .stat-card.green .stat-num { color: #07c160; }
+    .stat-card.yellow .stat-num { color: #ff976a; }
+    .stat-card.pink .stat-num { color: #eb2f96; }
+    .stat-card.purple .stat-num { color: #722ed1; }
+    .stat-card.lightblue .stat-num { color: #00b4d8; }
+    .quick-section { padding: 0 12px; }
+    .quick-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .quick-item { background: #fff; border-radius: 12px; padding: 14px 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; position: relative; transition: transform 0.2s; }
+    .quick-item:active { transform: scale(0.96); }
+    .quick-item .icon { font-size: 24px; margin-bottom: 6px; }
+    .quick-item .name { font-size: 12px; color: #333; }
+    .quick-item .badge { position: absolute; top: 6px; right: 6px; background: #ff4d4f; color: #fff; font-size: 10px; padding: 1px 5px; border-radius: 10px; min-width: 16px; }
+    .recent-section { padding: 0 12px; margin-top: 16px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .section-header .title { font-size: 15px; font-weight: 600; color: #333; }
+    .section-header .more { font-size: 12px; color: #999; cursor: pointer; }
+    .recent-task { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .recent-task:active { background: #fafafa; }
+    .task-title { font-size: 14px; font-weight: 500; color: #333; margin-bottom: 6px; }
+    .task-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .task-status-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+    .task-info { font-size: 12px; color: #999; }
+    .task-empty { text-align: center; padding: 30px; color: #999; font-size: 13px; }
+
+    .person-header { background: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .search-row { display: flex; gap: 10px; align-items: center; }
+    .search-box { flex: 1; background: #f5f5f5; border-radius: 20px; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+    .search-box input { flex: 1; border: none; background: transparent; font-size: 14px; outline: none; }
+    .search-box .icon { font-size: 16px; color: #999; }
+    .add-btn { width: 36px; height: 36px; background: #1989fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; cursor: pointer; }
+    .filter-tags { padding: 10px 16px; background: #fff; overflow-x: auto; white-space: nowrap; }
+    .filter-tags::-webkit-scrollbar { display: none; }
+    .filter-tag { display: inline-block; padding: 5px 14px; border-radius: 16px; font-size: 13px; margin-right: 8px; background: #f5f5f5; color: #666; cursor: pointer; transition: all 0.2s; }
+    .filter-tag.active { background: #1989fa; color: #fff; }
+    .person-list { padding: 8px 12px; }
+    .person-card { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; transition: background 0.2s; }
+    .person-card:active { background: #fafafa; }
+    .person-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; position: relative; flex-shrink: 0; }
+    .person-check { position: absolute; top: -2px; left: -2px; width: 16px; height: 16px; border-radius: 50%; background: #52c41a; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; }
+    .person-info { flex: 1; min-width: 0; }
+    .person-name { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .person-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 4px; }
+    .person-tags .mini-tag { padding: 1px 6px; border-radius: 4px; font-size: 10px; background: #f5f5f5; color: #666; }
+    .person-meta { font-size: 12px; color: #999; }
+    .no-more { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+
+    .location-page { padding: 0; }
+    .location-header { position: fixed; top: 0; left: 0; right: 0; background: #fff; padding: 12px 16px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .location-title { font-size: 17px; font-weight: 600; text-align: center; margin-bottom: 10px; }
+    .location-search { background: #f5f5f5; border-radius: 20px; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+    .location-search input { flex: 1; border: none; background: transparent; font-size: 14px; outline: none; }
+    .location-filter { padding: 8px 0; overflow-x: auto; white-space: nowrap; }
+    .location-filter::-webkit-scrollbar { display: none; }
+    .map-container { position: fixed; top: 90px; left: 0; right: 0; bottom: 60px; }
+    #amap { width: 100%; height: 100%; }
+    .map-sidebar { position: absolute; left: 8px; top: 8px; bottom: 80px; width: 80px; background: rgba(255,255,255,0.95); border-radius: 12px; z-index: 10; overflow-y: auto; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    .map-sidebar::-webkit-scrollbar { width: 0; }
+    .sidebar-title { font-size: 12px; font-weight: 600; color: #333; text-align: center; padding: 10px 4px 6px; border-bottom: 1px solid #eee; }
+    .village-item { padding: 10px 4px; font-size: 12px; text-align: center; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; color: #333; }
+    .village-item:active { background: #e6f7ff; }
+    .village-item.active { background: #e6f7ff; border-left-color: #1989fa; color: #1989fa; font-weight: 600; }
+    .map-layers { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px; z-index: 10; }
+    .layer-btn { width: 32px; height: 32px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; border: 2px solid transparent; }
+    .layer-btn.active { border-color: #1989fa; background: #e6f7ff; }
+    .location-list { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0; max-height: 200px; overflow-y: auto; z-index: 10; box-shadow: 0 -2px 12px rgba(0,0,0,0.1); }
+    .location-list-header { padding: 12px 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid #eee; position: sticky; top: 0; background: #fff; }
+    .location-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+    .location-item:active { background: #fafafa; }
+    .location-icon { width: 36px; height: 36px; border-radius: 8px; background: #e6f7ff; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 18px; }
+    .location-info { flex: 1; }
+    .location-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .location-addr { font-size: 12px; color: #999; }
+    .location-arrow { color: #ccc; font-size: 18px; }
+    
+    /* 地图标记按钮 */
+    .map-add-marker-btn { position: absolute; bottom: 210px; left: 50%; transform: translateX(-50%); z-index: 20; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 16px rgba(25, 137, 250, 0.4); cursor: pointer; transition: all 0.3s; }
+    .map-add-marker-btn:active { transform: translateX(-50%) scale(0.95); }
+    .map-add-marker-btn.active { background: linear-gradient(135deg, #ff976a, #ed6a0c); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 152, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); } }
+    .map-add-marker-btn .badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; border-radius: 50%; background: #ff4d4f; color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+    
+    /* 地图标记点样式 */
+    .custom-marker { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #1989fa, #07c160); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+    .custom-marker:hover { transform: scale(1.1); }
+    .custom-marker.has-info { background: linear-gradient(135deg, #fa8c16, #faad14); }
+    .custom-marker.dragging { opacity: 0.8; cursor: move; }
+    .custom-marker.person-marker { background: linear-gradient(135deg, #722ed1, #b37feb); }
+    
+    /* 地图弹窗样式 */
+    .marker-popup { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0; z-index: 1000; transform: translateY(100%); transition: transform 0.3s ease; max-height: 70vh; overflow-y: auto; }
+    .marker-popup.show { transform: translateY(0); }
+    .marker-popup-header { padding: 16px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+    .marker-popup-title { font-size: 16px; font-weight: 600; }
+    .marker-popup-close { width: 28px; height: 28px; border-radius: 50%; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .marker-popup-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; }
+    .marker-popup-base { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #eee; }
+    .marker-popup-info { flex: 1; }
+    .marker-popup-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .marker-popup-meta { font-size: 13px; color: #999; }
+    .marker-popup-tags { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px; }
+    .marker-popup-tag { padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+    .marker-popup-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; }
+    .marker-popup-action { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; padding: 12px 8px; border-radius: 12px; background: #f7f8fa; transition: background 0.2s; }
+    .marker-popup-action:active { background: #eee; }
+    .marker-popup-action .icon { font-size: 24px; }
+    .marker-popup-action .name { font-size: 12px; color: #666; }
+    .marker-popup-action.danger { background: #fff1f0; }
+    .marker-popup-action.danger .name { color: #ff4d4f; }
+    
+    /* 地图加载提示 */
+    .map-loading-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; }
+    .map-loading-spinner { width: 40px; height: 40px; border: 3px solid #e8e8e8; border-top-color: #1989fa; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .map-loading-text { font-size: 14px; color: #666; margin-bottom: 16px; }
+    .map-retry-btn { padding: 8px 24px; background: #1989fa; color: #fff; border-radius: 20px; font-size: 14px; cursor: pointer; border: none; }
+
+    .task-header { background: #fff; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .task-header h2 { font-size: 17px; font-weight: 600; }
+    .publish-btn { padding: 6px 14px; background: #1989fa; color: #fff; border-radius: 16px; font-size: 13px; cursor: pointer; }
+    .task-filters { background: #fff; padding: 0 16px 10px; }
+    .filter-row { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .task-card { background: #fff; border-radius: 12px; padding: 14px; margin: 10px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer; }
+    .task-card:active { background: #fafafa; }
+    .task-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .task-type-icon { display: flex; align-items: center; gap: 6px; }
+    .task-type-icon .icon { font-size: 18px; }
+    .task-type-name { font-size: 14px; font-weight: 600; }
+    .task-status-badge { padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+    .task-card-desc { font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.5; }
+    .task-card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #999; }
+    .task-card-meta { display: flex; gap: 12px; }
+    .task-arrow { color: #ccc; font-size: 18px; }
+    .no-task { text-align: center; padding: 60px 20px; color: #999; }
+    .no-task .icon { font-size: 48px; margin-bottom: 12px; }
+
+    .my-header { background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); color: #fff; padding: 30px 16px 20px; display: flex; align-items: center; gap: 16px; }
+    .my-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 32px; border: 3px solid rgba(255,255,255,0.5); }
+    .my-info { flex: 1; }
+    .my-name { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+    .my-role { font-size: 13px; opacity: 0.9; }
+    .my-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #eee; margin: 12px; border-radius: 12px; overflow: hidden; }
+    .my-stat { background: #fff; padding: 16px 8px; text-align: center; }
+    .my-stat .num { font-size: 22px; font-weight: 700; color: #1989fa; }
+    .my-stat .label { font-size: 12px; color: #666; margin-top: 4px; }
+    .my-module { margin: 12px; background: #fff; border-radius: 12px; overflow: hidden; }
+    .module-title { font-size: 14px; font-weight: 600; color: #333; padding: 14px 16px 10px; border-bottom: 1px solid #f5f5f5; }
+    .module-items { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .module-item { padding: 16px 8px; text-align: center; cursor: pointer; border-right: 1px solid #f5f5f5; }
+    .module-item:nth-child(3n) { border-right: none; }
+    .module-item:active { background: #fafafa; }
+    .module-item .icon { font-size: 24px; margin-bottom: 6px; }
+    .module-item .name { font-size: 12px; color: #333; }
+    .menu-list { margin: 12px; background: #fff; border-radius: 12px; overflow: hidden; }
+    .menu-item { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid #f5f5f5; cursor: pointer; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item:active { background: #fafafa; }
+    .menu-item .icon { font-size: 20px; margin-right: 12px; color: #666; }
+    .menu-item .text { flex: 1; font-size: 15px; color: #333; }
+    .menu-item .sub-text { font-size: 12px; color: #999; margin-left: 8px; }
+    .menu-item .arrow { color: #ccc; font-size: 18px; }
+    .menu-item.danger { color: #ff4d4f; }
+    .menu-item.danger .icon { color: #ff4d4f; }
+    .install-btn { background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; padding: 4px 12px; border-radius: 14px; font-size: 12px; }
+
+    /* 添加到主屏幕引导弹窗 */
+    .homescreen-guide { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-radius: 16px 16px 0 0; z-index: 2000; transform: translateY(100%); transition: transform 0.3s ease; }
+    .homescreen-guide.show { transform: translateY(0); }
+    .homescreen-guide-header { padding: 16px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; }
+    .homescreen-guide-title { font-size: 16px; font-weight: 600; }
+    .homescreen-guide-close { width: 28px; height: 28px; border-radius: 50%; background: #f5f5f5; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+    .homescreen-guide-content { padding: 20px 16px; }
+    .homescreen-guide-item { display: flex; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #f5f5f5; }
+    .homescreen-guide-item:last-child { border-bottom: none; }
+    .guide-icon { font-size: 32px; margin-right: 16px; }
+    .guide-text h4 { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 6px; }
+    .guide-text p { font-size: 13px; color: #666; line-height: 1.5; }
+    .guide-device-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-bottom: 6px; }
+    .guide-device-tag.android { background: #e6f7ff; color: #1989fa; }
+    .guide-device-tag.ios { background: #fef0ff; color: #722ed1; }
+    .guide-device-tag.pc { background: #f6ffed; color: #52c41a; }
+    .guide-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .guide-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .detail-header { background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); color: #fff; padding: 20px 16px; }
+    .detail-base { display: flex; align-items: center; }
+    .detail-avatar { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-right: 16px; }
+    .detail-name { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+    .detail-sub { font-size: 13px; opacity: 0.9; }
+    .detail-tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .detail-tag { padding: 4px 10px; background: rgba(255,255,255,0.2); border-radius: 12px; font-size: 12px; }
+    .detail-section { padding: 16px; background: #fff; margin-bottom: 12px; }
+    .detail-section-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row .label { color: #999; }
+    .detail-row .value { color: #333; text-align: right; }
+    .detail-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px; }
+
+    .import-tabs { margin: 12px; }
+    .upload-area { border: 2px dashed #dcdee0; border-radius: 12px; padding: 40px 20px; text-align: center; margin: 16px; background: #fafafa; cursor: pointer; transition: border-color 0.2s; }
+    .upload-area:active { border-color: #1989fa; }
+    .upload-area .icon { font-size: 48px; color: #999; margin-bottom: 12px; }
+    .upload-area p { color: #666; font-size: 14px; }
+    .upload-area .hint { color: #999; font-size: 12px; margin-top: 8px; }
+    .manual-form { padding: 16px; }
+    .import-preview { margin: 16px; background: #fff; border-radius: 12px; overflow: hidden; }
+    .import-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+    .import-table th, .import-table td { padding: 8px; text-align: left; border-bottom: 1px solid #f5f5f5; }
+    .import-table th { background: #fafafa; color: #666; font-weight: 500; }
+    .import-result { text-align: center; padding: 20px; }
+    .import-result .icon { font-size: 48px; margin-bottom: 12px; }
+
+    .family-tree { padding: 20px; overflow-x: auto; }
+    .tree-person { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #1989fa, #07c160); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 3px solid #fff; cursor: pointer; }
+    .tree-person .name { font-size: 13px; font-weight: 600; }
+    .tree-person .role { font-size: 10px; opacity: 0.9; }
+    .tree-person.holder { background: linear-gradient(135deg, #fa8c16, #faad14); }
+    .tree-person.spouse { background: linear-gradient(135deg, #eb2f96, #f759ab); }
+    .tree-person.child { background: linear-gradient(135deg, #1890ff, #52c2ff); }
+    .tree-spouse-row { display: flex; align-items: center; }
+    .tree-connector { width: 30px; height: 2px; background: #ccc; }
+    .tree-children { display: flex; margin-top: 20px; position: relative; }
+    .tree-children::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 2px; height: 20px; background: #ccc; }
+    .tree-children-row { display: flex; position: relative; }
+    .tree-children-row::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: #ccc; }
+    .tree-node { display: inline-flex; flex-direction: column; align-items: center; margin: 0 8px; }
+
+    .archive-header { background: linear-gradient(135deg, #1989fa 0%, #07c160 100%); color: #fff; padding: 20px 16px; }
+    .archive-holder { display: flex; align-items: center; }
+    .archive-avatar { width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 12px; }
+    .archive-holder-info h3 { font-size: 18px; font-weight: 600; }
+    .archive-holder-info p { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+    .archive-table { width: 100%; font-size: 13px; border-collapse: collapse; }
+    .archive-table th, .archive-table td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #f5f5f5; }
+    .archive-table th { background: #fafafa; color: #666; font-weight: 500; }
+    .record-item { padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+    .record-item:last-child { border-bottom: none; }
+    .record-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .record-type { font-size: 14px; font-weight: 500; }
+    .record-date { font-size: 12px; color: #999; }
+    .record-content { font-size: 13px; color: #666; line-height: 1.5; }
+
+    .van-tabbar { border-top: 1px solid #eee; }
+    @media (max-width: 360px) { .quick-grid { gap: 8px; } .quick-item .icon { font-size: 20px; } .quick-item .name { font-size: 11px; } .stats-grid { gap: 8px; } .stat-card .stat-num { font-size: 18px; } }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="lock-screen" v-if="!isUnlocked">
+      <div class="lock-logo">
+        <div class="icon">🌾</div>
+        <h1>米花助手</h1>
+        <p>南景村智慧村务管理</p>
+      </div>
+      <div class="lock-form">
+        <input type="password" class="lock-input" v-model="password" @keyup.enter="checkPassword" placeholder="请输入访问密码" maxlength="20">
+        <button class="lock-btn" @click="checkPassword">进入应用</button>
+        <p class="lock-error" v-if="errorMsg">{{ errorMsg }}</p>
+      </div>
+      <p class="lock-hint">威远镇南景村专用</p>
+    </div>
+
+    <div class="login-screen" v-else-if="!isLoggedIn">
+      <div class="login-logo">🌾</div>
+      <div class="login-card">
+        <div class="login-title">
+          <h2>米花助手</h2>
+          <p>请登录以继续使用</p>
+        </div>
+        <input type="text" class="login-input" v-model="loginName" placeholder="请输入姓名" @keyup.enter="doLogin">
+        <input type="tel" class="login-input" v-model="loginPhone" placeholder="请输入手机号码" maxlength="11" @keyup.enter="doLogin">
+        <button class="login-btn" @click="doLogin">登 录</button>
+        <p class="login-error" v-if="loginError">{{ loginError }}</p>
+      </div>
+      <p class="lock-hint" style="position: relative; margin-top: 40px;">威远镇南景村专用</p>
+    </div>
+
+    <div v-else>
+      <div class="page-container" v-if="currentPage === 'home'">
+        <div class="home-header">
+          <h1>🌾 米花助手</h1>
+          <p class="date-time">{{ currentDate }} {{ currentTime }}</p>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-num">{{ stats.totalPeople }}</div><div class="stat-label">村民总数</div></div>
+          <div class="stat-card green"><div class="stat-num">{{ stats.totalHouseholds }}</div><div class="stat-label">家庭户数</div></div>
+          <div class="stat-card yellow"><div class="stat-num">{{ pendingTasks }}</div><div class="stat-label">待办任务</div></div>
+          <div class="stat-card pink"><div class="stat-num">{{ stats.monitor }}</div><div class="stat-label">待调解</div></div>
+          <div class="stat-card purple"><div class="stat-num">{{ specialCount }}</div><div class="stat-label">特殊人群</div></div>
+          <div class="stat-card lightblue"><div class="stat-num">{{ markerCount }}</div><div class="stat-label">位置标记</div></div>
+        </div>
+        <div class="quick-section">
+          <div class="quick-title">📌 快捷功能</div>
+          <div class="quick-grid">
+            <div class="quick-item" @click="goPage('location')"><div class="icon">📖</div><div class="name">村级地图</div></div>
+            <div class="quick-item" @click="goPage('person')"><div class="icon">👥</div><div class="name">人员信息</div><div class="badge" v-if="stats.totalPeople > 0">{{ stats.totalPeople }}</div></div>
+            <div class="quick-item" @click="goPage('dispute')"><div class="icon">⚠️</div><div class="name">纠纷调解</div><div class="badge" v-if="disputeCount > 0">{{ disputeCount }}</div></div>
+            <div class="quick-item" @click="goPage('special')"><div class="icon">💜</div><div class="name">特殊人群</div><div class="badge" v-if="specialCount > 0">{{ specialCount }}</div></div>
+            <div class="quick-item" @click="goPage('location')"><div class="icon">📍</div><div class="name">位置管理</div></div>
+            <div class="quick-item" @click="goPage('tasks')"><div class="icon">📅</div><div class="name">任务管理</div><div class="badge" v-if="pendingTasks > 0">{{ pendingTasks }}</div></div>
+            <div class="quick-item" @click="goPage('family')"><div class="icon">🔗</div><div class="name">人物关系</div></div>
+            <div class="quick-item" @click="goPage('import')"><div class="icon">📄</div><div class="name">数据导入</div></div>
+          </div>
+        </div>
+        <div class="recent-section">
+          <div class="section-header"><div class="title">📋 最近任务</div><div class="more" @click="goPage('tasks')">查看全部 ›</div></div>
+          <div v-if="recentTasks.length === 0" class="task-empty">暂无进行中的任务</div>
+          <div v-else>
+            <div class="recent-task" v-for="task in recentTasks" :key="task.id" @click="viewTask(task)">
+              <div class="task-title">{{ task.type }} - {{ task.description.substring(0, 15) }}{{ task.description.length > 15 ? '...' : '' }}</div>
+              <div class="task-meta">
+                <span class="task-status-tag" :style="{ background: getStatusBg(task.status), color: getStatusColor(task.status) }">{{ task.status }}</span>
+                <span class="task-info">📅 {{ task.deadline }}</span>
+                <span class="task-info">👤 {{ task.assignee }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="height: 20px;"></div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'person'">
+        <div class="person-header">
+          <div class="search-row">
+            <div class="search-box"><span class="icon">🔍</span><input type="text" v-model="searchKeyword" placeholder="搜索姓名、身份证、手机号" @input="doSearch"></div>
+            <div class="add-btn" @click="goPage('import')">+</div>
+          </div>
+        </div>
+        <div class="filter-tags hide-scrollbar">
+          <span class="filter-tag" :class="{ active: activeFilter === '' }" @click="toggleFilter('')">全部({{ stats.totalPeople }})</span>
+          <span class="filter-tag" :class="{ active: activeFilter === '特殊人群' }" @click="toggleFilter('特殊人群')">特殊人群({{ specialCount }})</span>
+          <span class="filter-tag" :class="{ active: activeFilter === '脱贫户' }" @click="toggleFilter('脱贫户')">脱贫户({{ stats.likepoor }})</span>
+          <span class="filter-tag" :class="{ active: activeFilter === '低保' }" @click="toggleFilter('低保')">低保户({{ stats.lowIncome }})</span>
+          <span class="filter-tag" :class="{ active: activeFilter === '党员' }" @click="toggleFilter('党员')">党员户({{ stats.party }})</span>
+          <span class="filter-tag" :class="{ active: activeFilter === '监测户' }" @click="toggleFilter('监测户')">监测户({{ stats.monitor }})</span>
+        </div>
+        <div class="person-list">
+          <div v-if="searchResults.length === 0" class="task-empty" style="padding: 60px 20px;"><div style="font-size: 48px; margin-bottom: 12px;">👆</div><p>输入关键词开始搜索</p></div>
+          <div class="person-card" v-for="person in searchResults" :key="person.id" @click="showDetail(person)">
+            <div class="person-avatar">{{ person.name?.charAt(0) || '?' }}<div class="person-check" v-if="person.relationToHolder === '本人'">✓</div><div v-if="person.longitude && person.latitude" style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:#07c160;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;">📍</div></div>
+            <div class="person-info">
+              <div class="person-name">{{ person.name }}<span v-if="person.relationToHolder" class="mini-tag tag-holder">{{ person.relationToHolder }}</span></div>
+              <div class="person-tags"><span v-for="tag in (person.tags || []).slice(0, 2)" :key="tag" class="mini-tag" :class="'tag-' + getTagClass(tag)">{{ tag }}</span></div>
+              <div class="person-meta">{{ person.gender }} · {{ getAge(person.birthDate) }}岁 · {{ person.phone || '无手机' }}</div>
+              <div class="person-meta">📍 {{ person.village }} · 👨‍👩‍👧‍👦 {{ getFamilySize(person.householdId) }}人</div>
+            </div>
+          </div>
+          <div class="no-more" v-if="searchResults.length > 0 && searchKeyword">—— 已显示全部 {{ searchResults.length }} 条结果 ——</div>
+        </div>
+      </div>
+
+      <div class="page-container location-page" v-if="currentPage === 'location'">
+        <div class="location-header">
+          <div class="location-title">📍 位置信息</div>
+          <div class="location-search"><span>🔍</span><input type="text" v-model="locationSearch" placeholder="搜索住户位置"></div>
+          <div class="location-filter hide-scrollbar">
+            <span class="filter-tag" :class="{ active: locationFilter === '' }" @click="locationFilter = ''">全部</span>
+            <span class="filter-tag" :class="{ active: locationFilter === '脱贫户' }" @click="locationFilter = '脱贫户'">脱贫户</span>
+            <span class="filter-tag" :class="{ active: locationFilter === '监测户' }" @click="locationFilter = '监测户'">监测户</span>
+            <span class="filter-tag" :class="{ active: locationFilter === '党员' }" @click="locationFilter = '党员'">党员户</span>
+            <span class="filter-tag" :class="{ active: locationFilter === '特殊人群' }" @click="locationFilter = '特殊人群'">特殊人群</span>
+          </div>
+        </div>
+        <div class="map-container">
+          <div id="amap"></div>
+          <div class="map-sidebar">
+            <div class="sidebar-title">村民小组</div>
+            <div class="village-item" :class="{ active: currentVillage === '全部' }" @click="switchVillage('全部')">全部</div>
+            <div class="village-item" :class="{ active: currentVillage === v }" v-for="v in villageList" :key="v" @click="switchVillage(v)">{{ v }}</div>
+          </div>
+          <div class="map-layers"><div class="layer-btn" :class="{ active: mapLayerShow }" @click="mapLayerShow = !mapLayerShow" title="图层">🏠</div></div>
+          <!-- 添加标记按钮 -->
+          <div class="map-add-marker-btn" :class="{ active: isAddingMarker }" @click="toggleAddMarkerMode" title="添加标记">
+            <span v-if="!isAddingMarker">+</span>
+            <span v-else>✕</span>
+          </div>
+        </div>
+        <div class="location-list">
+          <div class="location-list-header">📋 地块/住户列表 ({{ filteredLocationList.length }})</div>
+          <div class="location-item" v-for="item in filteredLocationList.slice(0, 20)" :key="item.id" @click="showDetail(item)">
+            <div class="location-icon">🏠</div>
+            <div class="location-info"><div class="location-name">{{ item.name }}</div><div class="location-addr">{{ item.village }} {{ item.address || '' }}</div></div>
+            <div class="location-arrow">›</div>
+          </div>
+          <div class="task-empty" v-if="filteredLocationList.length === 0">暂无位置数据</div>
+        </div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'tasks'">
+        <div class="task-header"><h2>📋 任务管理</h2><div class="publish-btn" @click="goToAddTask">+ 发布</div></div>
+        <div class="task-filters">
+          <div class="filter-row hide-scrollbar">
+            <span class="filter-tag" :class="{ active: taskTypeFilter === '' }" @click="taskTypeFilter = ''">全部({{ tasks.length }})</span>
+            <span class="filter-tag" :class="{ active: taskTypeFilter === '调解' }" @click="taskTypeFilter = '调解'">调解({{ getTaskCountByType('调解') }})</span>
+            <span class="filter-tag" :class="{ active: taskTypeFilter === '排查' }" @click="taskTypeFilter = '排查'">排查({{ getTaskCountByType('排查') }})</span>
+            <span class="filter-tag" :class="{ active: taskTypeFilter === '走访' }" @click="taskTypeFilter = '走访'">走访({{ getTaskCountByType('走访') }})</span>
+          </div>
+          <div class="filter-row hide-scrollbar">
+            <span class="filter-tag" :class="{ active: taskStatusFilter === '' }" @click="taskStatusFilter = ''">全部</span>
+            <span class="filter-tag" :class="{ active: taskStatusFilter === '待完成' }" @click="taskStatusFilter = '待完成'">待处理</span>
+            <span class="filter-tag" :class="{ active: taskStatusFilter === '进行中' }" @click="taskStatusFilter = '进行中'">进行中</span>
+            <span class="filter-tag" :class="{ active: taskStatusFilter === '已完成' }" @click="taskStatusFilter = '已完成'">已完成</span>
+          </div>
+        </div>
+        <div v-if="filteredTasks.length === 0" class="no-task"><div class="icon">🎉</div><p>暂无任务</p></div>
+        <div class="task-card" v-for="task in filteredTasks" :key="task.id" @click="viewTask(task)">
+          <div class="task-card-header">
+            <div class="task-type-icon"><span class="icon">{{ getTaskIcon(task.type) }}</span><span class="task-type-name">{{ task.type }}</span></div>
+            <span class="task-status-badge" :style="{ background: getStatusBg(task.status), color: getStatusColor(task.status) }">{{ task.status }}</span>
+          </div>
+          <div class="task-card-desc">{{ task.description }}</div>
+          <div class="task-card-footer">
+            <div class="task-card-meta"><span>📅 {{ task.deadline }}</span><span>📍 {{ task.village }}</span><span>👤 {{ task.assignee }}</span></div>
+            <span class="task-arrow">›</span>
+          </div>
+        </div>
+        <div style="height: 20px;"></div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'my'">
+        <div class="my-header">
+          <div class="my-avatar">👨‍💼</div>
+          <div class="my-info"><div class="my-name">村干部</div><div class="my-role">{{ currentUser }} · 南景村</div></div>
+        </div>
+        <div class="my-stats">
+          <div class="my-stat"><div class="num">{{ tasks.length }}</div><div class="label">总任务数</div></div>
+          <div class="my-stat"><div class="num">{{ completedTasks }}</div><div class="label">已完成</div></div>
+          <div class="my-stat"><div class="num">{{ completionRate }}%</div><div class="label">完成率</div></div>
+        </div>
+        <div class="my-module">
+          <div class="module-title">🗺️ 快捷功能</div>
+          <div class="module-items">
+            <div class="module-item" @click="goPage('location')"><div class="icon">🗺️</div><div class="name">村级地图</div></div>
+            <div class="module-item" @click="goPage('dispute')"><div class="icon">⚠️</div><div class="name">纠纷调解</div></div>
+            <div class="module-item" @click="goPage('special')"><div class="icon">💜</div><div class="name">特殊人群</div></div>
+          </div>
+        </div>
+        <div class="my-module">
+          <div class="module-title">📊 数据管理</div>
+          <div class="module-items">
+            <div class="module-item" @click="goPage('import')"><div class="icon">📥</div><div class="name">数据导入</div></div>
+            <div class="module-item" @click="exportAllData"><div class="icon">📤</div><div class="name">导出数据</div></div>
+            <div class="module-item" @click="syncData"><div class="icon">🔄</div><div class="name">数据同步</div></div>
+          </div>
+        </div>
+        <div class="menu-list">
+          <div class="menu-item" @click="goPage('search')"><span class="icon">🔍</span><span class="text">人员查询</span><span class="arrow">›</span></div>
+          <div class="menu-item" @click="goPage('archive')"><span class="icon">📁</span><span class="text">一户一档</span><span class="arrow">›</span></div>
+          <div class="menu-item" @click="goPage('family')"><span class="icon">👨‍👩‍👧‍👦</span><span class="text">亲属图谱</span><span class="arrow">›</span></div>
+          <div class="menu-item" @click="showHomescreenGuide"><span class="icon">📱</span><span class="text">添加到主屏幕</span><span class="sub-text">像App一样使用</span><span class="arrow">›</span></div>
+          <div class="menu-item" @click="showAbout = true"><span class="icon">ℹ️</span><span class="text">关于米花助手</span><span class="arrow">›</span></div>
+          <div class="menu-item danger" @click="logout"><span class="icon">🚪</span><span class="text">退出登录</span><span class="arrow">›</span></div>
+        </div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'detail' && currentPerson">
+        <van-nav-bar title="人员详情" left-arrow @click-left="goBack" fixed placeholder />
+        <div style="padding-top: 46px;">
+          <div class="detail-header">
+            <div class="detail-base"><div class="detail-avatar">{{ currentPerson.name?.charAt(0) || '?' }}</div><div><div class="detail-name">{{ currentPerson.name }}</div><div class="detail-sub">{{ currentPerson.gender }} · {{ getAge(currentPerson.birthDate) }}岁 · {{ currentPerson.ethnicity }}</div></div></div>
+            <div class="detail-tags"><span class="detail-tag" v-for="tag in currentPerson.tags" :key="tag">{{ tag }}</span></div>
+          </div>
+          <div class="detail-section"><div class="detail-section-title">📋 基本信息</div>
+            <div class="detail-row"><span class="label">身份证号</span><span class="value">{{ currentPerson.id }}</span></div>
+            <div class="detail-row"><span class="label">民族</span><span class="value">{{ currentPerson.ethnicity }}</span></div>
+            <div class="detail-row"><span class="label">出生日期</span><span class="value">{{ currentPerson.birthDate }}</span></div>
+            <div class="detail-row"><span class="label">村民小组</span><span class="value">{{ currentPerson.village }}</span></div>
+            <div class="detail-row"><span class="label">门牌号</span><span class="value">{{ currentPerson.address || '-' }}</span></div>
+            <div class="detail-row"><span class="label">手机号</span><span class="value">{{ currentPerson.phone || '-' }}</span></div>
+            <div class="detail-row"><span class="label">与户主关系</span><span class="value">{{ currentPerson.relationToHolder }}</span></div>
+            <div class="detail-row" v-if="currentPerson.longitude && currentPerson.latitude"><span class="label">GPS位置</span><span class="value">📍 已标记</span></div>
+          </div>
+          <div class="detail-section"><div class="detail-section-title">🏥 参保情况</div>
+            <div class="detail-row"><span class="label">医疗保险</span><span class="value">{{ currentPerson.medicalInsurance ? '已参保' : '未参保' }}</span></div>
+            <div class="detail-row"><span class="label">养老保险</span><span class="value">{{ currentPerson.pensionInsurance ? '已参保' : '未参保' }}</span></div>
+          </div>
+          <div class="detail-section" v-if="familyMembers.length > 0"><div class="detail-section-title">👨‍👩‍👧‍👦 家庭成员 ({{ familyMembers.length }}人)</div>
+            <div class="person-card" v-for="member in familyMembers" :key="member.id" @click="showDetail(member)" style="padding: 10px; margin: 0;"><div class="person-avatar" style="width: 36px; height: 36px; font-size: 14px;">{{ member.name?.charAt(0) || '?' }}</div><div class="person-info"><div class="person-name" style="font-size: 14px;">{{ member.name }}</div><div class="person-meta">{{ member.relationToHolder }}</div></div></div>
+          </div>
+          <div class="detail-actions"><van-button type="primary" plain @click="viewArchive(currentPerson.householdId)">📁 查看家庭档案</van-button><van-button type="success" plain @click="viewFamily(currentPerson.householdId)">👨‍👩‍👧‍👦 亲属图谱</van-button></div>
+          <div style="padding: 0 16px 16px; display: flex; gap: 12px;">
+            <van-button type="primary" block @click="addLocationToPerson">📍 标记位置</van-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'import'">
+        <van-nav-bar title="数据导入" left-arrow @click-left="goBack" fixed placeholder />
+        <div style="padding-top: 46px;">
+          <van-tabs v-model:active="importTab" class="import-tabs">
+            <van-tab title="📤 Excel导入" name="excel">
+              <div v-if="!importing && !importResult">
+                <div class="upload-area" @click="triggerFileInput"><div class="icon">📁</div><p>点击或拖拽上传Excel文件</p><p class="hint">支持 .xlsx 和 .xls 格式</p></div>
+                <input type="file" ref="fileInput" accept=".xlsx,.xls" style="display: none;" @change="handleFileSelect">
+                <div class="card" style="margin: 16px;"><h4 style="font-size: 14px; margin-bottom: 8px;">📋 Excel表格要求</h4><p style="font-size: 13px; color: #666; line-height: 1.8;">表格需包含：姓名、身份证号、性别、民族、出生日期、村民小组、门牌号、与户主关系</p></div>
+              </div>
+              <van-loading v-if="importing" style="text-align: center; padding: 40px;">正在解析文件...</van-loading>
+              <div v-if="importResult" class="import-result"><div class="icon" :style="{ color: importResult.success ? '#52c41a' : '#ff4d4f' }">{{ importResult.success ? '✅' : '❌' }}</div><h3>{{ importResult.success ? '导入完成' : '导入失败' }}</h3><p style="color: #666; margin: 12px 0;">成功：{{ importResult.successCount }} 条<br>跳过：{{ importResult.skipCount }} 条</p><van-button type="primary" @click="resetImport">继续导入</van-button></div>
+              <div v-if="previewData.length > 0 && !importResult" class="import-preview">
+                <div style="padding: 12px; font-weight: 600; border-bottom: 1px solid #eee;">数据预览（前10条）</div>
+                <div style="overflow-x: auto;">
+                  <table class="import-table"><thead><tr><th>姓名</th><th>身份证</th><th>性别</th><th>村组</th></tr></thead>
+                    <tbody><tr v-for="(row, idx) in previewData.slice(0, 10)" :key="idx"><td>{{ row.name }}</td><td>{{ row.id?.slice(0,6) }}...</td><td>{{ row.gender }}</td><td>{{ row.village }}</td></tr></tbody>
+                  </table>
+                </div>
+                <div style="padding: 12px;"><van-button type="primary" block :loading="importing" @click="confirmImport">确认导入 {{ previewData.length }} 条</van-button></div>
+              </div>
+            </van-tab>
+            <van-tab title="✏️ 手动录入" name="manual">
+              <div class="manual-form">
+                <van-form @submit="submitManual">
+                  <van-cell-group inset>
+                    <van-field v-model="manualForm.name" name="姓名" label="姓名" placeholder="请输入姓名" :rules="[{ required: true, message: '请输入姓名' }]" />
+                    <van-field v-model="manualForm.id" name="身份证号" label="身份证号" placeholder="18位身份证号" maxlength="18" :rules="[{ required: true, message: '请输入身份证号' }]" />
+                    <van-field v-model="manualForm.gender" name="性别" label="性别" placeholder="男/女" :rules="[{ required: true, message: '请输入性别' }]" />
+                    <van-field v-model="manualForm.ethnicity" name="民族" label="民族" placeholder="如：汉族、傣族" :rules="[{ required: true, message: '请输入民族' }]" />
+                    <van-field v-model="manualForm.birthDate" name="出生日期" label="出生日期" placeholder="YYYY-MM-DD" :rules="[{ required: true, message: '请输入出生日期' }]" />
+                    <van-field v-model="manualForm.village" name="村民小组" label="村民小组" placeholder="如：上芒窝" :rules="[{ required: true, message: '请输入村民小组' }]" />
+                    <van-field v-model="manualForm.phone" name="手机号" label="手机号" placeholder="请输入手机号" type="tel" />
+                    <van-field v-model="manualForm.relationToHolder" name="与户主关系" label="与户主关系" placeholder="本人/配偶/子/女" />
+                  </van-cell-group>
+                  <div style="margin: 16px;"><van-button type="primary" round block native-type="submit">提交保存</van-button></div>
+                </van-form>
+              </div>
+            </van-tab>
+          </van-tabs>
+        </div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'taskDetail' || currentPage === 'addTask'">
+        <van-nav-bar :title="currentPage === 'addTask' ? '新建任务' : '任务详情'" left-arrow @click-left="goBack" fixed placeholder />
+        <div style="padding-top: 46px;">
+          <div class="card" style="margin-top: 12px;">
+            <van-form @submit="saveTask">
+              <van-cell-group inset>
+                <van-field v-model="taskForm.type" name="任务类型" label="任务类型" placeholder="请选择" readonly clickable @click="showTaskTypePicker = true" :rules="[{ required: true, message: '请选择任务类型' }]" />
+                <van-field v-model="taskForm.description" name="任务描述" label="任务描述" type="textarea" rows="3" placeholder="请输入任务详情" :rules="[{ required: true, message: '请输入任务描述' }]" />
+                <van-field v-model="taskForm.assignee" name="责任人" label="责任人" placeholder="请输入责任人" :rules="[{ required: true, message: '请输入责任人' }]" />
+                <van-field v-model="taskForm.village" name="所属村组" label="所属村组" placeholder="如：上芒窝" :rules="[{ required: true, message: '请输入所属村组' }]" />
+                <van-field v-model="taskForm.deadline" is-link readonly name="截止日期" label="截止日期" placeholder="请选择日期" @click="showDatePicker = true" :rules="[{ required: true, message: '请选择截止日期' }]" />
+              </van-cell-group>
+              <div style="margin: 16px;" v-if="currentPage === 'addTask'"><van-button type="primary" round block native-type="submit">创建任务</van-button></div>
+            </van-form>
+            <template v-if="currentPage === 'taskDetail' && currentTask">
+              <div style="margin: 16px;"><h4 style="margin-bottom: 12px;">状态变更</h4>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;"><van-button v-for="status in ['待完成', '进行中', '已完成']" :key="status" :type="currentTask.status === status ? 'primary' : 'default'" size="small" @click="updateTaskStatus(status)">{{ status }}</van-button></div>
+              </div>
+              <van-cell-group inset title="工作备注"><van-field v-model="taskNotes" type="textarea" rows="3" placeholder="填写工作进展..." /></van-cell-group>
+              <div style="margin: 16px;"><van-button type="success" round block @click="saveTaskNotes">保存备注</van-button></div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'family'">
+        <van-nav-bar title="亲属图谱" left-arrow @click-left="goBack" fixed placeholder />
+        <div style="padding-top: 46px;" v-if="familyTreeData">
+          <div class="card">
+            <div class="family-tree">
+              <div class="tree-node"><div class="tree-person holder" @click="showDetail(familyTreeData.holder)"><span class="name">{{ familyTreeData.holder.name }}</span><span class="role">户主</span></div></div>
+              <div class="tree-spouse-row" v-if="familyTreeData.spouse"><div class="tree-connector"></div><div class="tree-node"><div class="tree-person spouse" @click="showDetail(familyTreeData.spouse)"><span class="name">{{ familyTreeData.spouse.name }}</span><span class="role">配偶</span></div></div></div>
+              <div class="tree-children" v-if="familyTreeData.children?.length > 0">
+                <div class="tree-children-row"><div class="tree-node" v-for="child in familyTreeData.children" :key="child.id"><div class="tree-connector"></div><div class="tree-person child" @click="showDetail(child)"><span class="name">{{ child.name }}</span><span class="role">{{ child.relationToHolder || '子女' }}</span></div></div></div>
+              </div>
+            </div>
+            <div style="text-align: center; color: #999; font-size: 12px; margin-top: 16px;">点击成员头像查看详情</div>
+          </div>
+        </div>
+        <div v-else class="task-empty" style="padding-top: 100px;"><div style="font-size: 48px; margin-bottom: 12px;">👨‍👩‍👧‍👦</div><p>请先选择一位家庭成员</p><van-button type="primary" style="margin-top: 16px;" @click="goPage('person')">去查询人员</van-button></div>
+      </div>
+
+      <div class="page-container" v-if="currentPage === 'archive'">
+        <van-nav-bar title="一户一档" left-arrow @click-left="goBack" fixed placeholder />
+        <div style="padding-top: 46px;" v-if="archiveData">
+          <div class="archive-header"><div class="archive-holder"><div class="archive-avatar">🏠</div><div class="archive-holder-info"><h3>{{ archiveData.holder.name }}</h3><p>{{ archiveData.holder.village }} · 户号：{{ archiveData.id }}</p></div></div><div class="detail-tags" style="margin-top: 12px;"><span class="detail-tag" v-for="tag in archiveData.tags" :key="tag">{{ tag }}</span></div></div>
+          <div class="detail-section"><div class="detail-section-title">👨‍👩‍👧‍👦 家庭成员</div><table class="archive-table"><thead><tr><th>姓名</th><th>关系</th><th>性别</th><th>年龄</th></tr></thead><tbody><tr v-for="member in archiveData.members" :key="member.id"><td>{{ member.name }}</td><td>{{ member.relationToHolder }}</td><td>{{ member.gender }}</td><td>{{ getAge(member.birthDate) }}</td></tr></tbody></table></div>
+          <div class="detail-section"><div class="detail-section-title">🏠 户籍信息</div><div class="detail-row"><span class="label">户号</span><span class="value">{{ archiveData.id }}</span></div><div class="detail-row"><span class="label">户籍类型</span><span class="value">{{ archiveData.householdType || '农业户籍' }}</span></div><div class="detail-row"><span class="label">居住地址</span><span class="value">{{ archiveData.holder.village }}</span></div></div>
+          <div class="detail-section"><div class="detail-section-title">💊 参保情况</div><div class="detail-row"><span class="label">医疗保险</span><span class="value">{{ hasMedicalInsurance ? '全员参保' : '部分未参' }}</span></div><div class="detail-row"><span class="label">养老保险</span><span class="value">{{ hasPensionInsurance ? '全员参保' : '部分未参' }}</span></div></div>
+          <div style="padding: 16px;"><van-button type="primary" round block @click="exportArchive">📥 导出该户档案</van-button></div>
+        </div>
+        <div v-else class="task-empty" style="padding-top: 100px;"><div style="font-size: 48px; margin-bottom: 12px;">📁</div><p>请先选择一户家庭</p><van-button type="primary" style="margin-top: 16px;" @click="goPage('person')">去查询人员</van-button></div>
+      </div>
+
+      <van-tabbar v-model="tabActive" @change="onTabChange" fixed placeholder safe-area-inset-bottom>
+        <van-tabbar-item><template #icon><span style="font-size: 22px;">🏠</span></template><span>首页</span></van-tabbar-item>
+        <van-tabbar-item><template #icon><span style="font-size: 22px;">👥</span></template><span>人员</span></van-tabbar-item>
+        <van-tabbar-item><template #icon><span style="font-size: 22px;">📍</span></template><span>位置</span></van-tabbar-item>
+        <van-tabbar-item><template #icon><span style="font-size: 22px;">📋</span></template><span>任务</span></van-tabbar-item>
+        <van-tabbar-item><template #icon><span style="font-size: 22px;">👤</span></template><span>我的</span></van-tabbar-item>
+      </van-tabbar>
+    </div>
+
+    <!-- 标记详情弹窗 -->
+    <div class="marker-popup" :class="{ show: showMarkerPopup }" @click.stop>
+      <div class="marker-popup-header">
+        <span class="marker-popup-title">📍 标记详情</span>
+        <div class="marker-popup-close" @click="closeMarkerPopup">✕</div>
+      </div>
+      <div class="marker-popup-base" v-if="selectedMarker">
+        <div class="marker-popup-avatar">{{ selectedMarker.name?.charAt(0) || '?' }}</div>
+        <div class="marker-popup-info">
+          <div class="marker-popup-name">{{ selectedMarker.name }}</div>
+          <div class="marker-popup-meta">📍 {{ selectedMarker.village }}</div>
+          <div class="marker-popup-meta">📞 {{ selectedMarker.phone || '无' }}</div>
+        </div>
+      </div>
+      <div class="marker-popup-tags" v-if="selectedMarker && selectedMarker.tags && selectedMarker.tags.length > 0">
+        <span class="marker-popup-tag" v-for="tag in selectedMarker.tags" :key="tag" :class="'tag-' + getTagClass(tag)" style="padding: 3px 10px; border-radius: 4px; font-size: 12px;">{{ tag }}</span>
+      </div>
+      <div class="marker-popup-tags" v-else-if="selectedMarker">
+        <span style="color: #999; font-size: 13px;">暂无标签</span>
+      </div>
+      <div class="marker-popup-actions" v-if="selectedMarker">
+        <div class="marker-popup-action" @click="publishTaskFromMarker">
+          <span class="icon">📋</span>
+          <span class="name">发布任务</span>
+        </div>
+        <div class="marker-popup-action" @click="editMarkerInfo">
+          <span class="icon">✏️</span>
+          <span class="name">编辑信息</span>
+        </div>
+        <div class="marker-popup-action danger" @click="deleteMarkerConfirm">
+          <span class="icon">🗑️</span>
+          <span class="name">删除标记</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加标记弹窗 -->
+    <van-popup v-model:show="showAddMarkerForm" position="bottom" round style="max-height: 80vh;">
+      <div style="padding: 16px;">
+        <div style="font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px;">📍 添加位置标记</div>
+        <van-form @submit="submitMarker">
+          <van-cell-group inset>
+            <van-field v-model="markerForm.name" name="户主姓名" label="户主姓名" placeholder="请输入户主姓名" :rules="[{ required: true, message: '请输入户主姓名' }]" />
+            <van-field v-model="markerForm.phone" name="联系电话" label="联系电话" type="tel" placeholder="请输入联系电话" />
+            <van-field v-model="markerForm.village" name="所属村组" label="所属村组" placeholder="请选择村组" readonly clickable @click="showVillagePicker = true" :rules="[{ required: true, message: '请选择村组' }]" />
+            <van-field v-model="markerForm.address" name="详细地址" label="详细地址" placeholder="门牌号/组别" />
+          </van-cell-group>
+          <div style="padding: 12px 16px;">
+            <div style="font-size: 13px; color: #666; margin-bottom: 8px;">标签（可多选）</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span v-for="tag in availableTags" :key="tag" @click="toggleMarkerTag(tag)" :style="{ padding: '4px 12px', borderRadius: '16px', fontSize: '13px', cursor: 'pointer', background: markerForm.tags.includes(tag) ? '#1989fa' : '#f5f5f5', color: markerForm.tags.includes(tag) ? '#fff' : '#666' }">{{ tag }}</span>
+            </div>
+          </div>
+          <van-cell-group inset title="备注">
+            <van-field v-model="markerForm.remark" type="textarea" rows="2" placeholder="其他备注信息..." />
+          </van-cell-group>
+          <div style="margin: 16px;"><van-button type="primary" round block native-type="submit">保存标记</van-button></div>
+        </van-form>
+      </div>
+    </van-popup>
+
+    <!-- 编辑标记弹窗 -->
+    <van-popup v-model:show="showEditMarkerForm" position="bottom" round style="max-height: 80vh;">
+      <div style="padding: 16px;">
+        <div style="font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 16px;">✏️ 编辑标记信息</div>
+        <van-form @submit="saveMarkerEdit">
+          <van-cell-group inset>
+            <van-field v-model="markerForm.name" name="户主姓名" label="户主姓名" placeholder="请输入户主姓名" :rules="[{ required: true, message: '请输入户主姓名' }]" />
+            <van-field v-model="markerForm.phone" name="联系电话" label="联系电话" type="tel" placeholder="请输入联系电话" />
+            <van-field v-model="markerForm.village" name="所属村组" label="所属村组" readonly clickable @click="showVillagePicker = true" />
+            <van-field v-model="markerForm.address" name="详细地址" label="详细地址" placeholder="门牌号/组别" />
+          </van-cell-group>
+          <div style="padding: 12px 16px;">
+            <div style="font-size: 13px; color: #666; margin-bottom: 8px;">标签（可多选）</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+              <span v-for="tag in availableTags" :key="tag" @click="toggleMarkerTag(tag)" :style="{ padding: '4px 12px', borderRadius: '16px', fontSize: '13px', cursor: 'pointer', background: markerForm.tags.includes(tag) ? '#1989fa' : '#f5f5f5', color: markerForm.tags.includes(tag) ? '#fff' : '#666' }">{{ tag }}</span>
+            </div>
+          </div>
+          <van-cell-group inset title="备注">
+            <van-field v-model="markerForm.remark" type="textarea" rows="2" placeholder="其他备注信息..." />
+          </van-cell-group>
+          <div style="margin: 16px;"><van-button type="primary" round block native-type="submit">保存修改</van-button></div>
+        </van-form>
+      </div>
+    </van-popup>
+
+    <!-- 村组选择器 -->
+    <van-popup v-model:show="showVillagePicker" position="bottom"><van-picker title="选择村组" :columns="villageList" @confirm="confirmVillage" @cancel="showVillagePicker = false" /></van-popup>
+
+    <!-- 添加到主屏幕引导 -->
+    <div class="guide-overlay" :class="{ show: showHomescreenGuide }" @click="showHomescreenGuide = false"></div>
+    <div class="homescreen-guide" :class="{ show: showHomescreenGuide }">
+      <div class="homescreen-guide-header">
+        <span class="homescreen-guide-title">📱 添加到主屏幕</span>
+        <div class="homescreen-guide-close" @click="showHomescreenGuide = false">✕</div>
+      </div>
+      <div class="homescreen-guide-content">
+        <div class="homescreen-guide-item">
+          <div class="guide-icon">🤖</div>
+          <div class="guide-text">
+            <span class="guide-device-tag android">安卓手机</span>
+            <h4>Chrome / 夸克 / UC浏览器</h4>
+            <p>点击浏览器右上角菜单按钮(⋮) → 选择「添加到主屏幕」或「添加至桌面」</p>
+          </div>
+        </div>
+        <div class="homescreen-guide-item">
+          <div class="guide-icon">🍎</div>
+          <div class="guide-text">
+            <span class="guide-device-tag ios">iPhone</span>
+            <h4>Safari浏览器</h4>
+            <p>点击底部分享按钮(📤) → 向下滚动 → 选择「添加到主屏幕」→ 点击「添加」</p>
+          </div>
+        </div>
+        <div class="homescreen-guide-item">
+          <div class="guide-icon">💻</div>
+          <div class="guide-text">
+            <span class="guide-device-tag pc">电脑</span>
+            <h4>Chrome / Edge / 360</h4>
+            <p>点击浏览器地址栏右侧安装图标(⬇️) → 选择「安装米花助手」</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <van-dialog v-model:show="showClearConfirm" title="确认清空" show-cancel-button :before-close="clearData"><div style="padding: 20px; text-align: center;"><p>确定要清空所有数据吗？</p><p style="color: #ff4d4f; margin-top: 8px; font-size: 13px;">此操作不可恢复！</p><van-field v-model="clearPassword" type="password" placeholder="请输入密码确认" style="margin-top: 16px;" /></div></van-dialog>
+    <van-dialog v-model:show="showChangePassword" title="修改密码" show-cancel-button @confirm="changePassword"><div style="padding: 20px;"><van-field v-model="newPassword" type="password" placeholder="请输入新密码（至少6位）" /></div></van-dialog>
+    <van-dialog v-model:show="showAbout" title="关于" :showConfirmButton="true"><div style="padding: 20px; text-align: center;"><div style="font-size: 48px; margin-bottom: 12px;">🌾</div><h3>米花助手</h3><p style="color: #666; margin: 8px 0;">版本 1.0.0</p><p style="color: #999; font-size: 12px;">威远镇南景村智慧村务管理平台</p></div></van-dialog>
+    <van-dialog v-model:show="showDeleteConfirm" title="确认删除" message="确定要删除该标记吗？此操作不可恢复。" show-cancel-button @confirm="deleteMarker"></van-dialog>
+    <van-popup v-model:show="showDatePicker" position="bottom"><van-date-picker v-model="selectedDate" title="选择日期" :min-date="new Date(2020, 0, 1)" @confirm="confirmDate" @cancel="showDatePicker = false" /></van-popup>
+    <van-popup v-model:show="showTaskTypePicker" position="bottom"><van-picker title="任务类型" :columns="taskTypes" @confirm="confirmTaskType" @cancel="showTaskTypePicker = false" /></van-popup>
+    <van-toast v-model:show="toast.show" :type="toast.type" :message="toast.message" />
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vant@4/lib/vant.min.js"></script>
+  <script src="https://unpkg.com/localforage@1.10.0/dist/localforage.min.js"></script>
+  <script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://webapi.amap.com/loader.js"></script>
+
+  <script>
+    const { createApp, ref, reactive, computed, onMounted, watch, nextTick } = Vue;
+    const db = localforage.createInstance({ name: 'mihua_db', storeName: 'app_data' });
+
+    // 允许登录的人员列表
+    const allowedUsers = [
+      { name: '刀玉林', phone: '19948948748' },
+      { name: '谢福英', phone: '13324997219' },
+      { name: '周清德', phone: '13629624861' },
+      { name: '查进', phone: '13368790608' },
+      { name: '代国王', phone: '18214082682' },
+      { name: '李林', phone: '13987914660' },
+      { name: '梅思荣', phone: '18287714807' }
+    ];
+
+    function simpleHash(str) { let hash = 0; for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash = hash & hash; } return hash.toString(36); }
+
+    const app = createApp({
+      setup() {
+        const isUnlocked = ref(false);
+        const isLoggedIn = ref(false);
+        const password = ref('');
+        const errorMsg = ref('');
+        const loginName = ref('');
+        const loginPhone = ref('');
+        const loginError = ref('');
+        const currentUser = ref('');
+
+        const currentPage = ref('home');
+        const tabActive = ref(0);
+
+        const searchKeyword = ref('');
+        const searchResults = ref([]);
+        const activeFilter = ref('');
+
+        const locationSearch = ref('');
+        const locationFilter = ref('');
+        const mapLayerShow = ref(true);
+        const currentVillage = ref('全部');
+        const villageList = ['上芒窝','芒顿','红坡','石头寨','芒酸','芒别','芒景','芒哈','芒景岗','换乐','竜令','下芒窝','草地','回塘','芒角','芒腊','等伴','芒费','芒良','芒赛'];
+        const allPeople = ref([]);
+
+        const currentPerson = ref(null);
+        const familyMembers = ref([]);
+
+        const importTab = ref('excel');
+        const importing = ref(false);
+        const importResult = ref(null);
+        const previewData = ref([]);
+        const fileInput = ref(null);
+        const manualForm = reactive({ name: '', id: '', gender: '', ethnicity: '', birthDate: '', village: '', address: '', phone: '', relationToHolder: '本人' });
+
+        const tasks = ref([]);
+        const currentTask = ref(null);
+        const taskForm = reactive({ type: '', description: '', assignee: '', village: '', deadline: '' });
+        const taskNotes = ref('');
+        const taskTypes = ['入户走访', '矛盾调解', '安全排查', '政策宣讲', '隐患整改', '防汛防火', '其他'];
+        const showDatePicker = ref(false);
+        const showTaskTypePicker = ref(false);
+        const selectedDate = reactive({ year: '', month: '', day: '' });
+        const taskTypeFilter = ref('');
+        const taskStatusFilter = ref('');
+
+        let map = null;
+        const mapMarkers = [];
+        const personMarkers = [];
+        let clickListener = null;
+
+        // 地图标记相关
+        const isAddingMarker = ref(false);
+        const showMarkerPopup = ref(false);
+        const selectedMarker = ref(null);
+        const showAddMarkerForm = ref(false);
+        const showEditMarkerForm = ref(false);
+        const showVillagePicker = ref(false);
+        const showDeleteConfirm = ref(false);
+        const markerCount = ref(0);
+        const availableTags = ['脱贫户', '监测户', '党员', '低保', '特困', '残疾', '留守老人', '留守儿童'];
+        const pendingMarkerPosition = ref(null);
+        const markerForm = reactive({
+          name: '', phone: '', village: '', address: '', tags: [], remark: ''
+        });
+        const editingMarkerId = ref(null);
+        const deferredPrompt = ref(null);
+        const showHomescreenGuide = ref(false);
+        const markerSourcePersonId = ref(null);
+
+        const archiveData = ref(null);
+        const familyTreeData = ref(null);
+
+        const showClearConfirm = ref(false);
+        const showChangePassword = ref(false);
+        const showAbout = ref(false);
+        const clearPassword = ref('');
+        const newPassword = ref('');
+
+        const toast = reactive({ show: false, type: 'success', message: '' });
+
+        const currentDate = ref('');
+        const currentTime = ref('');
+
+        const stats = reactive({ totalPeople: 0, totalHouseholds: 0, likepoor: 0, monitor: 0, lowIncome: 0, specialCare: 0, disabled: 0, leftBehind: 0, party: 0 });
+
+        const pendingTasks = computed(() => tasks.value.filter(t => t.status === '待完成' || t.status === '进行中').length);
+        const completedTasks = computed(() => tasks.value.filter(t => t.status === '已完成').length);
+        const completionRate = computed(() => tasks.value.length > 0 ? Math.round(completedTasks.value / tasks.value.length * 100) : 0);
+        const specialCount = computed(() => stats.disabled + stats.leftBehind + stats.specialCare);
+        const disputeCount = computed(() => tasks.value.filter(t => t.type === '矛盾调解' && t.status !== '已完成').length);
+        const recentTasks = computed(() => tasks.value.filter(t => t.status !== '已完成').slice(0, 3));
+
+        const filteredLocationList = computed(() => {
+          let list = allPeople.value;
+          if (locationFilter.value === '特殊人群') list = list.filter(p => p.tags?.some(t => ['残疾', '特困', '留守老人', '留守儿童'].includes(t)));
+          else if (locationFilter.value) list = list.filter(p => p.tags?.includes(locationFilter.value));
+          if (locationSearch.value) { const kw = locationSearch.value.toLowerCase(); list = list.filter(p => p.name?.toLowerCase().includes(kw) || p.village?.toLowerCase().includes(kw)); }
+          return list;
+        });
+
+        const filteredTasks = computed(() => {
+          let list = tasks.value;
+          if (taskTypeFilter.value) list = list.filter(t => t.type?.includes(taskTypeFilter.value));
+          if (taskStatusFilter.value) list = list.filter(t => t.status === taskStatusFilter.value);
+          return list;
+        });
+
+        const hasMedicalInsurance = computed(() => archiveData.value?.members?.every(m => m.medicalInsurance));
+        const hasPensionInsurance = computed(() => archiveData.value?.members?.every(m => m.pensionInsurance));
+
+        function checkPassword() {
+          const hashed = simpleHash(password.value);
+          const storedHash = localStorage.getItem('mihua_pwd_hash') || simpleHash('njc123456');
+          if (hashed === storedHash) { isUnlocked.value = true; localStorage.setItem('mihua_session', Date.now().toString()); errorMsg.value = ''; const savedUser = localStorage.getItem('mihua_user'); if (savedUser) { isLoggedIn.value = true; currentUser.value = savedUser; loadAllData(); } }
+          else { errorMsg.value = '密码错误，请重试'; password.value = ''; }
+        }
+
+        function doLogin() {
+          if (!loginName.value || !loginPhone.value) { loginError.value = '请输入姓名和手机号'; return; }
+          const user = allowedUsers.find(u => u.name === loginName.value && u.phone === loginPhone.value);
+          if (user) { isLoggedIn.value = true; currentUser.value = user.name; localStorage.setItem('mihua_user', user.name); localStorage.setItem('mihua_login_time', Date.now().toString()); loginError.value = ''; loginName.value = ''; loginPhone.value = ''; loadAllData(); }
+          else { loginError.value = '姓名或手机号不匹配'; }
+        }
+
+        function logout() { localStorage.removeItem('mihua_user'); localStorage.removeItem('mihua_login_time'); localStorage.removeItem('mihua_session'); isLoggedIn.value = false; isUnlocked.value = false; password.value = ''; currentUser.value = ''; currentPage.value = 'home'; tabActive.value = 0; }
+
+        async function loadAllData() {
+          try { 
+            const people = await db.getItem('people') || []; 
+            const taskList = await db.getItem('tasks') || []; 
+            const households = await db.getItem('households') || []; 
+            const markers = await db.getItem('markers') || [];
+            allPeople.value = people; 
+            stats.totalPeople = people.length; 
+            stats.totalHouseholds = households.length; 
+            markerCount.value = markers.length;
+            const tagCounts = { '脱贫户': 0, '监测户': 0, '低保': 0, '特困': 0, '残疾': 0, '留守老人': 0, '留守儿童': 0, '党员': 0 }; 
+            people.forEach(p => { if (p.tags) p.tags.forEach(tag => { if (tagCounts.hasOwnProperty(tag)) tagCounts[tag]++; }); }); 
+            Object.assign(stats, tagCounts); 
+            tasks.value = taskList; 
+          } catch (e) {} 
+        }
+
+        async function doSearch() { if (!searchKeyword.value && !activeFilter.value) { searchResults.value = []; return; } try { let people = await db.getItem('people') || []; if (activeFilter.value === '特殊人群') people = people.filter(p => p.tags?.some(t => ['残疾', '特困', '留守老人', '留守儿童'].includes(t))); else if (activeFilter.value) people = people.filter(p => p.tags?.includes(activeFilter.value)); if (searchKeyword.value) { const kw = searchKeyword.value.toLowerCase(); people = people.filter(p => p.name?.toLowerCase().includes(kw) || p.id?.includes(kw) || p.phone?.includes(kw) || p.village?.toLowerCase().includes(kw)); } searchResults.value = people; } catch (e) {} }
+        function toggleFilter(filter) { activeFilter.value = activeFilter.value === filter ? '' : filter; doSearch(); }
+        async function showDetail(person) { currentPerson.value = person; currentPage.value = 'detail'; if (person.householdId) { try { const people = await db.getItem('people') || []; familyMembers.value = people.filter(p => p.householdId === person.householdId); } catch (e) {} } }
+        async function viewArchive(householdId) { if (!householdId) { showToast('该人员未绑定户号'); return; } try { const people = await db.getItem('people') || []; const records = await db.getItem('records') || []; const members = people.filter(p => p.householdId === householdId); const holder = members.find(m => m.relationToHolder === '本人') || members[0]; const allTags = new Set(); members.forEach(m => { if (m.tags) m.tags.forEach(t => allTags.add(t)); }); archiveData.value = { id: householdId, holder, members, tags: Array.from(allTags), records: records.filter(r => r.householdId === householdId) }; currentPage.value = 'archive'; } catch (e) {} }
+        async function viewFamily(householdId) { if (!householdId) { showToast('该人员未绑定户号'); return; } try { const people = await db.getItem('people') || []; const members = people.filter(p => p.householdId === householdId); const holder = members.find(m => m.relationToHolder === '本人') || members[0]; const spouse = members.find(m => m.relationToHolder === '配偶'); const children = members.filter(m => ['子', '女', '孙子', '孙女', '外孙', '外孙女'].includes(m.relationToHolder)); familyTreeData.value = { holder, spouse, children }; currentPage.value = 'family'; } catch (e) {} }
+        function exportArchive() { if (!archiveData.value) return; const data = archiveData.value.members.map(m => ({ '姓名': m.name, '身份证号': m.id, '性别': m.gender, '民族': m.ethnicity, '与户主关系': m.relationToHolder, '村民小组': m.village, '标签': (m.tags || []).join(', ') })); const ws = XLSX.utils.json_to_sheet(data); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, '家庭成员'); XLSX.writeFile(wb, `${archiveData.value.holder.name}_家庭档案.xlsx`); showToast('导出成功'); }
+        async function exportAllData() { try { const people = await db.getItem('people') || []; const ws1 = XLSX.utils.json_to_sheet(people.map(p => ({ '姓名': p.name, '身份证号': p.id, '性别': p.gender, '民族': p.ethnicity, '出生日期': p.birthDate, '村民小组': p.village, '手机号': p.phone || '', '与户主关系': p.relationToHolder, '户号': p.householdId || '', '标签': (p.tags || []).join(', ') }))); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws1, '人员信息'); XLSX.writeFile(wb, `南景村数据导出_${new Date().toISOString().slice(0,10)}.xlsx`); showToast('导出成功'); } catch (e) { showToast('导出失败', 'fail'); } }
+        function syncData() { showToast('数据同步功能开发中'); }
+        function triggerFileInput() { fileInput.value?.click(); }
+        function handleFileSelect(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (evt) => { try { importing.value = true; const data = new Uint8Array(evt.target.result); const workbook = XLSX.read(data, { type: 'array' }); const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]); const parsed = jsonData.map(row => ({ name: String(row['姓名'] || row['name'] || '').trim(), id: String(row['身份证号'] || row['身份证'] || row['id'] || '').trim(), gender: String(row['性别'] || row['gender'] || '').trim(), ethnicity: String(row['民族'] || row['ethnicity'] || '').trim(), birthDate: String(row['出生日期'] || row['birthDate'] || '').trim(), village: String(row['村民小组'] || row['village'] || '').trim(), address: String(row['门牌号'] || row['地址'] || '').trim(), phone: String(row['手机号'] || row['电话'] || '').trim(), relationToHolder: String(row['与户主关系'] || row['关系'] || '本人').trim() })).filter(row => row.name && row.id); autoAssignHouseholdId(parsed); previewData.value = parsed; importing.value = false; } catch (e) { importing.value = false; showToast('文件解析失败', 'fail'); } }; reader.readAsArrayBuffer(file); }
+        function autoAssignHouseholdId(people) { const groups = {}; people.forEach((p, idx) => { const key = `${p.name}_${p.village}_${p.address}`; if (!groups[key]) groups[key] = []; groups[key].push(idx); }); let householdCount = 0; Object.keys(groups).forEach(key => { const indices = groups[key]; if (indices.length > 0) { const householdId = `HK${String(Date.now()).slice(-8)}${String(householdCount).padStart(3, '0')}`; indices.forEach(idx => { people[idx].householdId = householdId; }); householdCount++; } }); }
+        async function confirmImport() { if (previewData.value.length === 0) return; try { importing.value = true; const existingPeople = await db.getItem('people') || []; const existingIds = new Set(existingPeople.map(p => p.id)); let successCount = 0, skipCount = 0; const newPeople = []; previewData.value.forEach(p => { if (existingIds.has(p.id)) { skipCount++; } else { newPeople.push({ ...p, tags: [], medicalInsurance: false, pensionInsurance: false, createdAt: new Date().toISOString(), creator: currentUser.value }); existingIds.add(p.id); successCount++; } }); await db.setItem('people', [...existingPeople, ...newPeople]); await updateHouseholds(); importing.value = false; importResult.value = { success: true, successCount, skipCount }; previewData.value = []; await loadAllData(); } catch (e) { importing.value = false; showToast('导入失败', 'fail'); } }
+        async function updateHouseholds() { const people = await db.getItem('people') || []; const householdsMap = {}; people.forEach(p => { if (p.householdId) { if (!householdsMap[p.householdId]) { householdsMap[p.householdId] = { id: p.householdId, holderName: '', village: p.village, members: [], tags: [] }; } householdsMap[p.householdId].members.push(p.id); if (p.tags) householdsMap[p.householdId].tags = [...new Set([...householdsMap[p.householdId].tags, ...p.tags])]; if (p.relationToHolder === '本人') householdsMap[p.householdId].holderName = p.name; } }); await db.setItem('households', Object.values(householdsMap)); }
+        function resetImport() { importResult.value = null; previewData.value = []; if (fileInput.value) fileInput.value.value = ''; }
+        async function submitManual() { try { const existingPeople = await db.getItem('people') || []; if (existingPeople.some(p => p.id === manualForm.id)) { showToast('该身份证号已存在', 'fail'); return; } const householdId = `HK${String(Date.now()).slice(-8)}001`; const newPerson = { ...manualForm, householdId, tags: [], medicalInsurance: false, pensionInsurance: false, createdAt: new Date().toISOString(), creator: currentUser.value }; await db.setItem('people', [...existingPeople, newPerson]); await updateHouseholds(); Object.keys(manualForm).forEach(k => manualForm[k] = ''); manualForm.relationToHolder = '本人'; showToast('保存成功'); await loadAllData(); } catch (e) { showToast('保存失败', 'fail'); } }
+        function goToAddTask() { taskForm.assignee = currentUser.value; currentPage.value = 'addTask'; }
+        function viewTask(task) { currentTask.value = task; Object.assign(taskForm, { type: task.type, description: task.description, assignee: task.assignee, village: task.village, deadline: task.deadline }); taskNotes.value = task.notes || ''; currentPage.value = 'taskDetail'; }
+        async function saveTask() { const newTask = { id: `TK${Date.now()}`, ...taskForm, status: '待完成', photos: [], notes: '', createdAt: new Date().toISOString(), creator: currentUser.value }; try { const taskList = await db.getItem('tasks') || []; taskList.push(newTask); await db.setItem('tasks', taskList); tasks.value = taskList; showToast('任务创建成功'); goBack(); } catch (e) { showToast('创建失败', 'fail'); } }
+        async function updateTaskStatus(status) { if (!currentTask.value) return; currentTask.value.status = status; try { const taskList = await db.getItem('tasks') || []; const idx = taskList.findIndex(t => t.id === currentTask.value.id); if (idx !== -1) { taskList[idx] = currentTask.value; await db.setItem('tasks', taskList); tasks.value = taskList; showToast(`已更新为"${status}"`); } } catch (e) {} }
+        async function saveTaskNotes() { if (!currentTask.value) return; currentTask.value.notes = taskNotes.value; try { const taskList = await db.getItem('tasks') || []; const idx = taskList.findIndex(t => t.id === currentTask.value.id); if (idx !== -1) { taskList[idx] = currentTask.value; await db.setItem('tasks', taskList); showToast('备注已保存'); } } catch (e) {} }
+        function confirmDate(val) { taskForm.deadline = `${val.selectedValues[0]}-${val.selectedValues[1].padStart(2, '0')}-${val.selectedValues[2].padStart(2, '0')}`; showDatePicker.value = false; }
+        function confirmTaskType(val) { taskForm.type = val.selectedValues[0]; showTaskTypePicker = false; }
+        function getTaskCountByType(type) { return tasks.value.filter(t => t.type?.includes(type)).length; }
+        function getTaskIcon(type) { const icons = { '入户走访': '🚶', '矛盾调解': '⚖️', '安全排查': '🔍', '政策宣讲': '📢', '隐患整改': '🔧', '防汛防火': '🔥' }; return icons[type] || '📋'; }
+        function getStatusBg(status) { const map = { '待完成': '#fff7e6', '进行中': '#e6f7ff', '已完成': '#f6ffed', '逾期': '#fff1f0' }; return map[status] || '#f5f5f5'; }
+        function getStatusColor(status) { const map = { '待完成': '#fa8c16', '进行中': '#1890ff', '已完成': '#52c41a', '逾期': '#ff4d4f' }; return map[status] || '#666'; }
+        function getTagClass(tag) { const map = { '脱贫户': 'likepoor', '监测户': 'monitor', '党员': 'party', '低保': 'lowincome', '特困': 'special', '残疾': 'special', '留守老人': 'elderly', '留守儿童': 'child' }; return map[tag] || 'normal'; }
+        function getFamilySize(householdId) { if (!householdId) return 1; return allPeople.value.filter(p => p.householdId === householdId).length; }
+
+        // 添加到主屏幕引导
+        function showHomescreenGuideAction() { showHomescreenGuide.value = true; }
+
+        // 地图标记功能
+        function toggleAddMarkerMode() {
+          isAddingMarker.value = !isAddingMarker.value;
+          if (isAddingMarker.value) {
+            showToast('请点击地图选择位置添加标记', 'default');
+            enableMapClick();
+          } else {
+            disableMapClick();
+          }
+        }
+
+        function enableMapClick() {
+          if (!map) return;
+          clickListener = map.on('click', onMapClick);
+          map.setDefaultCursor('crosshair');
+        }
+
+        function disableMapClick() {
+          if (map && clickListener) {
+            map.off('click', onMapClick);
+            clickListener = null;
+          }
+          map.setDefaultCursor('');
+        }
+
+        function onMapClick(e) {
+          if (!isAddingMarker.value) return;
+          pendingMarkerPosition.value = {
+            longitude: e.lnglat.getLng(),
+            latitude: e.lnglat.getLat()
+          };
+          isAddingMarker.value = false;
+          disableMapClick();
+          markerSourcePersonId.value = null;
+          showAddMarkerForm.value = true;
+        }
+
+        function toggleMarkerTag(tag) {
+          const idx = markerForm.tags.indexOf(tag);
+          if (idx === -1) {
+            markerForm.tags.push(tag);
+          } else {
+            markerForm.tags.splice(idx, 1);
+          }
+        }
+
+        async function submitMarker() {
+          if (!pendingMarkerPosition.value) {
+            showToast('位置信息丢失', 'fail');
+            return;
+          }
+          try {
+            const markers = await db.getItem('markers') || [];
+            const newMarker = {
+              id: `MK${Date.now()}`,
+              ...markerForm,
+              longitude: pendingMarkerPosition.value.longitude,
+              latitude: pendingMarkerPosition.value.latitude,
+              createdAt: new Date().toISOString(),
+              creator: currentUser.value,
+              personId: markerSourcePersonId.value
+            };
+            markers.push(newMarker);
+            await db.setItem('markers', markers);
+            markerCount.value = markers.length;
+
+            // 如果是从人员详情添加，同时更新人员的经纬度
+            if (markerSourcePersonId.value) {
+              const people = await db.getItem('people') || [];
+              const idx = people.findIndex(p => p.id === markerSourcePersonId.value);
+              if (idx !== -1) {
+                people[idx].longitude = pendingMarkerPosition.value.longitude;
+                people[idx].latitude = pendingMarkerPosition.value.latitude;
+                await db.setItem('people', people);
+                allPeople.value = people;
+              }
+            }
+
+            showAddMarkerForm.value = false;
+            resetMarkerForm();
+            loadAllMapMarkers();
+            showToast('标记添加成功');
+          } catch (e) {
+            showToast('保存失败', 'fail');
+          }
+        }
+
+        function resetMarkerForm() {
+          markerForm.name = '';
+          markerForm.phone = '';
+          markerForm.village = '';
+          markerForm.address = '';
+          markerForm.tags = [];
+          markerForm.remark = '';
+          pendingMarkerPosition.value = null;
+          editingMarkerId.value = null;
+          markerSourcePersonId.value = null;
+        }
+
+        async function loadAllMapMarkers() {
+          if (!map || typeof AMap === 'undefined') return;
+          try {
+            map.remove(mapMarkers);
+            map.remove(personMarkers);
+            mapMarkers.length = 0;
+            personMarkers.length = 0;
+
+            const markers = await db.getItem('markers') || [];
+            
+            markers.forEach(m => {
+              if (!m.longitude || !m.latitude) return;
+              if (currentVillage.value !== '全部' && m.village !== currentVillage.value) return;
+              
+              const iconContent = `<div class="custom-marker ${m.tags && m.tags.length > 0 ? 'has-info' : ''}">${m.name?.charAt(0) || '?'}</div>`;
+              const marker = new AMap.Marker({
+                position: [m.longitude, m.latitude],
+                content: iconContent,
+                title: m.name,
+                extData: m,
+                draggable: true,
+                offset: [-18, -18]
+              });
+              
+              marker.on('click', () => {
+                selectedMarker.value = m;
+                showMarkerPopup.value = true;
+              });
+              
+              marker.on('dragend', async (e) => {
+                const newPos = e.lnglat;
+                m.longitude = newPos.getLng();
+                m.latitude = newPos.getLat();
+                const markersList = await db.getItem('markers') || [];
+                const idx = markersList.findIndex(x => x.id === m.id);
+                if (idx !== -1) {
+                  markersList[idx] = m;
+                  await db.setItem('markers', markersList);
+                  showToast('位置已更新');
+                }
+              });
+              
+              mapMarkers.push(marker);
+              map.add(marker);
+            });
+
+            // 加载有经纬度的人员标记
+            const people = await db.getItem('people') || [];
+            const markerPersonIds = new Set(markers.map(m => m.personId));
+            
+            people.forEach(p => {
+              if (!p.longitude || !p.latitude) return;
+              if (markerPersonIds.has(p.id)) return;
+              if (currentVillage.value !== '全部' && p.village !== currentVillage.value) return;
+              
+              const iconContent = `<div class="custom-marker person-marker">${p.name?.charAt(0) || '?'}</div>`;
+              const marker = new AMap.Marker({
+                position: [p.longitude, p.latitude],
+                content: iconContent,
+                title: p.name + ' (人员)',
+                extData: { ...p, isPersonMarker: true },
+                offset: [-18, -18]
+              });
+              
+              marker.on('click', () => {
+                selectedMarker.value = { ...p, isPersonMarker: true };
+                showMarkerPopup.value = true;
+              });
+              
+              personMarkers.push(marker);
+              map.add(marker);
+            });
+          } catch (e) {
+            console.error('加载标记失败:', e);
+          }
+        }
+
+        function closeMarkerPopup() {
+          showMarkerPopup.value = false;
+          selectedMarker.value = null;
+        }
+
+        function publishTaskFromMarker() {
+          if (!selectedMarker.value) return;
+          closeMarkerPopup();
+          taskForm.village = selectedMarker.value.village || '';
+          taskForm.description = `${selectedMarker.value.name} - `;
+          goToAddTask();
+        }
+
+        function editMarkerInfo() {
+          if (!selectedMarker.value) return;
+          Object.assign(markerForm, {
+            name: selectedMarker.value.name || '',
+            phone: selectedMarker.value.phone || '',
+            village: selectedMarker.value.village || '',
+            address: selectedMarker.value.address || '',
+            tags: [...(selectedMarker.value.tags || [])],
+            remark: selectedMarker.value.remark || ''
+          });
+          editingMarkerId.value = selectedMarker.value.id;
+          closeMarkerPopup();
+          showEditMarkerForm.value = true;
+        }
+
+        async function saveMarkerEdit() {
+          if (!editingMarkerId.value) return;
+          try {
+            const markers = await db.getItem('markers') || [];
+            const idx = markers.findIndex(m => m.id === editingMarkerId.value);
+            if (idx !== -1) {
+              markers[idx] = { ...markers[idx], ...markerForm };
+              await db.setItem('markers', markers);
+              showEditMarkerForm.value = false;
+              loadAllMapMarkers();
+              showToast('修改已保存');
+            }
+            resetMarkerForm();
+          } catch (e) {
+            showToast('保存失败', 'fail');
+          }
+        }
+
+        function deleteMarkerConfirm() {
+          closeMarkerPopup();
+          showDeleteConfirm.value = true;
+        }
+
+        async function deleteMarker() {
+          if (!selectedMarker.value) return;
+          try {
+            const markers = await db.getItem('markers') || [];
+            const filtered = markers.filter(m => m.id !== selectedMarker.value.id);
+            await db.setItem('markers', filtered);
+            markerCount.value = filtered.length;
+            loadAllMapMarkers();
+            showToast('标记已删除');
+          } catch (e) {
+            showToast('删除失败', 'fail');
+          }
+        }
+
+        function confirmVillage(val) {
+          markerForm.village = val.selectedValues[0];
+          showVillagePicker.value = false;
+        }
+
+        // 为人员添加位置标记
+        function addLocationToPerson() {
+          if (!currentPerson.value) return;
+          markerSourcePersonId.value = currentPerson.value.id;
+          markerForm.name = currentPerson.value.name || '';
+          markerForm.phone = currentPerson.value.phone || '';
+          markerForm.village = currentPerson.value.village || '';
+          markerForm.address = currentPerson.value.address || '';
+          markerForm.tags = [...(currentPerson.value.tags || [])];
+          pendingMarkerPosition.value = null;
+          goPage('location');
+          nextTick(() => {
+            showToast('请在地图上点击位置', 'default');
+            isAddingMarker.value = true;
+            if (map) enableMapClick();
+          });
+        }
+
+        async function initMap() {
+          if (map) return;
+          const el = document.getElementById('amap');
+          if (!el) { setTimeout(() => initMap(), 300); return; }
+          
+          let retryCount = 0;
+          const maxRetries = 3;
+          
+          async function tryLoadMap() {
+            try {
+              if (typeof AMapLoader === 'undefined') {
+                el.innerHTML = '<div class="map-loading-overlay"><div class="map-loading-spinner"></div><div class="map-loading-text">正在加载地图组件...</div></div>';
+                if (retryCount < maxRetries) {
+                  retryCount++;
+                  setTimeout(tryLoadMap, 2000);
+                } else {
+                  el.innerHTML = '<div class="map-loading-overlay"><div style="font-size:48px;margin-bottom:16px;">⚠️</div><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">地图加载失败</div><div style="font-size:13px;color:#999;line-height:1.8;padding:0 20px;text-align:center;">请确保网络正常<br>如果无法加载，请使用本地服务器访问</div><button class="map-retry-btn" onclick="window.vueApp?.retryInitMap()">重试</button></div>';
+                }
+                return;
+              }
+              
+              el.innerHTML = '<div class="map-loading-overlay"><div class="map-loading-spinner"></div><div class="map-loading-text">正在加载地图...</div></div>';
+              
+              const AMap = await AMapLoader.load({ 
+                key: '073a5b8aa936d4074554029ea01d6f96', 
+                version: '2.0', 
+                plugins: ['AMap.ToolBar', 'AMap.Marker'] 
+              });
+              window.AMap = AMap;
+              map = new AMap.Map('amap', { zoom: 14, center: [100.65, 23.10], viewMode: '2D' });
+              map.addControl(new AMap.ToolBar({ position: 'RB' }));
+              loadAllMapMarkers();
+            } catch (e) {
+              console.error('地图初始化失败:', e);
+              el.innerHTML = `<div class="map-loading-overlay"><div style="font-size:48px;margin-bottom:16px;">⚠️</div><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">地图加载失败</div><div style="font-size:13px;color:#999;margin-bottom:16px;">${e.message || '请检查网络连接'}</div><button class="map-retry-btn" onclick="window.vueApp?.retryInitMap()">重新加载</button></div>`;
+            }
+          }
+          
+          tryLoadMap();
+        }
+
+        function retryInitMap() {
+          map = null;
+          initMap();
+        }
+
+        function switchVillage(villageName) { currentVillage.value = villageName; loadAllMapMarkers(); }
+        async function clearData(action) { if (action === 'cancel') return; if (clearPassword.value !== password.value && clearPassword.value !== 'njc123456') { showToast('密码错误', 'fail'); clearPassword.value = ''; return; } try { await db.clear(); clearPassword.value = ''; showToast('数据已清空'); Object.keys(stats).forEach(k => stats[k] = 0); tasks.value = []; allPeople.value = []; markerCount.value = 0; } catch (e) { showToast('清空失败', 'fail'); } }
+        function changePassword() { if (!newPassword.value || newPassword.value.length < 6) { showToast('密码至少6位', 'fail'); return; } localStorage.setItem('mihua_pwd_hash', simpleHash(newPassword.value)); newPassword.value = ''; showToast('密码已修改'); }
+        function getAge(birthDate) { if (!birthDate) return '-'; const birth = new Date(birthDate); const now = new Date(); let age = now.getFullYear() - birth.getFullYear(); if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) age--; return age; }
+        function showToast(message, type = 'success') { toast.message = message; toast.type = type; toast.show = true; }
+        function goPage(page) { currentPage.value = page; if (page === 'location') nextTick(() => initMap()); if (page === 'person') { activeFilter.value = ''; searchKeyword.value = ''; searchResults.value = []; } if (page === 'tasks') { taskTypeFilter.value = ''; taskStatusFilter.value = ''; } }
+        function goBack() { const pages = ['detail', 'archive', 'family', 'taskDetail', 'addTask', 'import']; if (pages.includes(currentPage.value)) currentPage.value = tabActive.value === 0 ? 'home' : (tabActive.value === 1 ? 'person' : (tabActive.value === 2 ? 'location' : (tabActive.value === 3 ? 'tasks' : 'my'))); }
+        function onTabChange(idx) { tabActive.value = idx; const pageMap = ['home', 'person', 'location', 'tasks', 'my']; currentPage.value = pageMap[idx]; if (pageMap[idx] === 'location') nextTick(() => initMap()); }
+        function updateTime() { const now = new Date(); currentDate.value = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`; currentTime.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`; }
+
+        // PWA 安装
+        async function installApp() {
+          if (deferredPrompt.value) {
+            deferredPrompt.value.prompt();
+            const { outcome } = await deferredPrompt.value.userChoice;
+            if (outcome === 'accepted') {
+              showToast('安装成功！');
+            }
+            deferredPrompt.value = null;
+          } else {
+            showHomescreenGuide.value = true;
+          }
+        }
+
+        function initPWA() {
+          window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt.value = e;
+            showToast('可以安装到桌面啦！', 'default');
+          });
+          
+          if ('serviceWorker' in navigator) {
+            const swCode = `
+              const CACHE_NAME = 'mihua-v1';
+              self.addEventListener('install', e => {
+                e.waitUntil(
+                  caches.open(CACHE_NAME).then(cache => {
+                    return cache.addAll(['./']);
+                  })
+                );
+                self.skipWaiting();
+              });
+              self.addEventListener('activate', e => {
+                e.waitUntil(
+                  caches.keys().then(keys => {
+                    return Promise.all(
+                      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+                    );
+                  })
+                );
+                self.clients.claim();
+              });
+              self.addEventListener('fetch', e => {
+                e.respondWith(
+                  caches.match(e.request).then(resp => {
+                    return resp || fetch(e.request);
+                  })
+                );
+              });
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+          }
+        }
+
+        watch([searchKeyword, activeFilter], () => { doSearch(); });
+        
+        onMounted(() => { 
+          updateTime(); 
+          setInterval(updateTime, 60000); 
+          initPWA();
+          const session = localStorage.getItem('mihua_session'); 
+          const loginTime = localStorage.getItem('mihua_login_time'); 
+          if (session && Date.now() - parseInt(session) < 30 * 60 * 1000) { 
+            isUnlocked.value = true; 
+            if (loginTime && Date.now() - parseInt(loginTime) < 30 * 60 * 1000) { 
+              const savedUser = localStorage.getItem('mihua_user'); 
+              if (savedUser) { isLoggedIn.value = true; currentUser.value = savedUser; loadAllData(); } 
+            } 
+          } 
+          if (!localStorage.getItem('mihua_pwd_hash')) localStorage.setItem('mihua_pwd_hash', simpleHash('njc123456')); 
+        });
+
+        // 暴露给全局用于重试
+        window.vueApp = {
+          retryInitMap
+        };
+
+        return { 
+          isUnlocked, isLoggedIn, password, errorMsg, loginName, loginPhone, loginError, currentUser, checkPassword, doLogin, logout, 
+          currentPage, tabActive, goPage, goBack, onTabChange, 
+          searchKeyword, searchResults, activeFilter, toggleFilter, doSearch, 
+          currentPerson, familyMembers, showDetail, getAge, getFamilySize, getTagClass, 
+          archiveData, viewArchive, hasMedicalInsurance, hasPensionInsurance, exportArchive, 
+          familyTreeData, viewFamily, addLocationToPerson,
+          importTab, importing, importResult, previewData, fileInput, manualForm, triggerFileInput, handleFileSelect, confirmImport, resetImport, submitManual, 
+          tasks, currentTask, taskForm, taskNotes, taskTypes, showDatePicker, showTaskTypePicker, selectedDate, 
+          viewTask, saveTask, updateTaskStatus, saveTaskNotes, confirmDate, confirmTaskType, 
+          taskTypeFilter, taskStatusFilter, filteredTasks, getTaskCountByType, getTaskIcon, goToAddTask, 
+          villageList, currentVillage, switchVillage, locationSearch, locationFilter, mapLayerShow, filteredLocationList, allPeople, 
+          stats, pendingTasks, completedTasks, completionRate, specialCount, markerCount, disputeCount, recentTasks, 
+          getStatusBg, getStatusColor, 
+          showClearConfirm, showChangePassword, showAbout, clearPassword, newPassword, clearData, changePassword, exportAllData, syncData, 
+          toast, showToast,
+          // 地图标记
+          isAddingMarker, toggleAddMarkerMode, showMarkerPopup, selectedMarker, closeMarkerPopup,
+          showAddMarkerForm, showEditMarkerForm, showVillagePicker, showDeleteConfirm, markerForm, availableTags,
+          toggleMarkerTag, submitMarker, saveMarkerEdit, editMarkerInfo, deleteMarkerConfirm, deleteMarker, confirmVillage,
+          retryInitMap,
+          // PWA
+          deferredPrompt, installApp, showHomescreenGuide, showHomescreenGuideAction
+        };
+      }
+    });
+
+    app.use(vant.Lazyload);
+    app.use(vant.Field);
+    app.use(vant.Button);
+    app.use(vant.Search);
+    app.use(vant.Tag);
+    app.use(vant.Tabbar);
+    app.use(vant.TabbarItem);
+    app.use(vant.Tabs);
+    app.use(vant.Tab);
+    app.use(vant.Form);
+    app.use(vant.CellGroup);
+    app.use(vant.Cell);
+    app.use(vant.Dialog);
+    app.use(vant.Popup);
+    app.use(vant.DatePicker);
+    app.use(vant.Picker);
+    app.use(vant.Loading);
+    app.use(vant.Toast);
+    app.use(vant.FixedBtn);
+    app.use(vant.NavBar);
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
