@@ -979,9 +979,147 @@
         async function exportAllData() { try { const people = await db.getItem('people') || []; const ws1 = XLSX.utils.json_to_sheet(people.map(p => ({ '姓名': p.name, '身份证号': p.id, '性别': p.gender, '民族': p.ethnicity, '出生日期': p.birthDate, '村民小组': p.village, '手机号': p.phone || '', '与户主关系': p.relationToHolder, '户号': p.householdId || '', '标签': (p.tags || []).join(', ') }))); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws1, '人员信息'); XLSX.writeFile(wb, `南景村数据导出_${new Date().toISOString().slice(0,10)}.xlsx`); showToast('导出成功'); } catch (e) { showToast('导出失败', 'fail'); } }
         function syncData() { showToast('数据同步功能开发中'); }
         function triggerFileInput() { fileInput.value?.click(); }
-        function handleFileSelect(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = async (evt) => { try { importing.value = true; const data = new Uint8Array(evt.target.result); const workbook = XLSX.read(data, { type: 'array' }); const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]); const parsed = jsonData.map(row => { const name = String(row['姓名'] || row['name'] || '').trim(); const id = String(row['身份证号'] || row['身份证'] || row['id'] || '').trim(); const gender = String(row['性别'] || row['gender'] || '').trim(); const ethnicity = String(row['民族'] || row['ethnicity'] || '').trim(); const birthDate = String(row['出生日期'] || row['birthDate'] || '').trim(); const village = String(row['村民小组'] || row['village'] || '').trim(); const address = String(row['门牌号'] || row['地址'] || '').trim(); const phone = String(row['手机号'] || row['电话'] || '').trim(); const relationToHolder = String(row['与户主关系'] || row['关系'] || '本人').trim(); // 解析标签 const tags = []; const tagStr = String(row['标签'] || row['tags'] || '').trim(); if (tagStr) { const rawTags = tagStr.split(/[,，、]/); rawTags.forEach(t => { t = t.trim(); if (t && !tags.includes(t)) tags.push(t); }); } // 解析脱贫/监测状态 const povertyStatus = String(row['脱贫监测'] || row['脱贫（监测）'] || row['脱贫'] || '').trim(); if (povertyStatus.includes('脱贫') && !povertyStatus.includes('监测')) { if (!tags.includes('脱贫户')) tags.push('脱贫户'); } if (povertyStatus.includes('监测')) { if (!tags.includes('监测户')) tags.push('监测户'); } // 解析特殊人群类型 const specialType = String(row['特殊人群'] || row['特殊人群类型'] || '').trim(); if (specialType) { const specialTags = specialType.split(/[,，、]/); specialTags.forEach(t => { t = t.trim(); if (t && !tags.includes(t)) { if (t.includes('低保')) tags.push('低保'); else if (t.includes('特困')) tags.push('特困'); else if (t.includes('残疾')) tags.push('残疾'); else if (t.includes('留守老人') || t === '老人(60-69)' || t === '老人(70-79)' || t === '老人(80以上)') tags.push('留守老人'); else if (t.includes('留守儿童') || t.includes('儿童')) tags.push('留守儿童'); else if (t.includes('精神')) tags.push('严重精神障碍'); else if (t.includes('未婚')) tags.push('大龄未婚'); else if (!tags.includes(t)) tags.push(t); } }); } return { name, id, gender, ethnicity, birthDate, village, address, phone, relationToHolder, tags }; }).filter(row => row.name && row.id); autoAssignHouseholdId(parsed); previewData.value = parsed; importing.value = false; } catch (e) { importing.value = false; showToast('文件解析失败', 'fail'); } }; reader.readAsArrayBuffer(file); }
-        function autoAssignHouseholdId(people) { const groups = {}; people.forEach((p, idx) => { // 按户主分组: 同一户主的所有成员 if (p.relationToHolder === '本人') { const key = `holder_${p.name}_${p.village}`; if (!groups[key]) groups[key] = []; groups[key].push(idx); } }); // 收集所有非户主人员，看他们属于哪个户主 for (let i = 0; i < people.length; i++) { const p = people[i]; if (p.relationToHolder !== '本人') { // 找同一户主名的其他人 for (let j = 0; j < people.length; j++) { if (j !== i && people[j].relationToHolder === '本人' && people[j].name === p.name && people[j].village === p.village) { const key = `holder_${people[j].name}_${people[j].village}`; if (groups[key]) { groups[key].push(i); break; } } } // 如果找不到对应的户主，按姓名+村组+地址分组 if (!groups[`holder_${p.name}_${p.village}`]?.includes(i)) { const key = `${p.name}_${p.village}_${p.address}`; if (!groups[key]) groups[key] = []; groups[key].push(i); } } } let householdCount = 0; Object.keys(groups).forEach(key => { const indices = groups[key]; if (indices.length > 0) { const householdId = `HK${String(Date.now()).slice(-8)}${String(householdCount).padStart(3, '0')}`; indices.forEach(idx => { people[idx].householdId = householdId; }); householdCount++; } }); }
-        async function confirmImport() { if (previewData.value.length === 0) return; try { importing.value = true; const existingPeople = await db.getItem('people') || []; const existingIds = new Set(existingPeople.map(p => p.id)); let successCount = 0, skipCount = 0; const newPeople = []; previewData.value.forEach(p => { if (existingIds.has(p.id)) { skipCount++; } else { // 确保tags是数组格式 const tags = Array.isArray(p.tags) ? p.tags : []; newPeople.push({ name: p.name, id: p.id, gender: p.gender, ethnicity: p.ethnicity || '汉族', birthDate: p.birthDate, village: p.village, address: p.address, phone: p.phone, relationToHolder: p.relationToHolder, householdId: p.householdId, tags, medicalInsurance: false, pensionInsurance: false, createdAt: new Date().toISOString(), creator: currentUser.value }); existingIds.add(p.id); successCount++; } }); await db.setItem('people', [...existingPeople, ...newPeople]); await updateHouseholds(); importing.value = false; importResult.value = { success: true, successCount, skipCount }; previewData.value = []; await loadAllData(); } catch (e) { importing.value = false; showToast('导入失败', 'fail'); } }
+        function handleFileSelect(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = async (evt) => {
+            try {
+              importing.value = true;
+              const data = new Uint8Array(evt.target.result);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+              const parsed = jsonData.map(row => {
+                const name = String(row['姓名'] || row['name'] || '').trim();
+                const id = String(row['身份证号'] || row['身份证'] || row['id'] || '').trim();
+                const gender = String(row['性别'] || row['gender'] || '').trim();
+                const ethnicity = String(row['民族'] || row['ethnicity'] || '').trim();
+                const birthDate = String(row['出生日期'] || row['birthDate'] || '').trim();
+                const village = String(row['村民小组'] || row['village'] || '').trim();
+                const address = String(row['门牌号'] || row['地址'] || '').trim();
+                const phone = String(row['手机号'] || row['电话'] || '').trim();
+                const relationToHolder = String(row['与户主关系'] || row['关系'] || '本人').trim();
+                const tags = [];
+                const tagStr = String(row['标签'] || row['tags'] || '').trim();
+                if (tagStr) {
+                  const rawTags = tagStr.split(/[,，、]/);
+                  rawTags.forEach(t => {
+                    t = t.trim();
+                    if (t && !tags.includes(t)) tags.push(t);
+                  });
+                }
+                const povertyStatus = String(row['脱贫监测'] || row['脱贫（监测）'] || row['脱贫'] || '').trim();
+                if (povertyStatus.includes('脱贫') && !povertyStatus.includes('监测')) {
+                  if (!tags.includes('脱贫户')) tags.push('脱贫户');
+                }
+                if (povertyStatus.includes('监测')) {
+                  if (!tags.includes('监测户')) tags.push('监测户');
+                }
+                const specialType = String(row['特殊人群'] || row['特殊人群类型'] || '').trim();
+                if (specialType) {
+                  const specialTags = specialType.split(/[,，、]/);
+                  specialTags.forEach(t => {
+                    t = t.trim();
+                    if (t && !tags.includes(t)) {
+                      if (t.includes('低保')) tags.push('低保');
+                      else if (t.includes('特困')) tags.push('特困');
+                      else if (t.includes('残疾')) tags.push('残疾');
+                      else if (t.includes('留守老人') || t === '老人(60-69)' || t === '老人(70-79)' || t === '老人(80以上)') tags.push('留守老人');
+                      else if (t.includes('留守儿童') || t.includes('儿童')) tags.push('留守儿童');
+                      else if (t.includes('精神')) tags.push('严重精神障碍');
+                      else if (t.includes('未婚')) tags.push('大龄未婚');
+                      else if (!tags.includes(t)) tags.push(t);
+                    }
+                  });
+                }
+                return { name, id, gender, ethnicity, birthDate, village, address, phone, relationToHolder, tags };
+              }).filter(row => row.name && row.id);
+              autoAssignHouseholdId(parsed);
+              previewData.value = parsed;
+              importing.value = false;
+            } catch (e) {
+              importing.value = false;
+              showToast('文件解析失败', 'fail');
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        }
+        function autoAssignHouseholdId(people) {
+          const groups = {};
+          people.forEach((p, idx) => {
+            if (p.relationToHolder === '本人') {
+              const key = `holder_${p.name}_${p.village}`;
+              if (!groups[key]) groups[key] = [];
+              groups[key].push(idx);
+            }
+          });
+          for (let i = 0; i < people.length; i++) {
+            const p = people[i];
+            if (p.relationToHolder !== '本人') {
+              for (let j = 0; j < people.length; j++) {
+                if (j !== i && people[j].relationToHolder === '本人' && people[j].name === p.name && people[j].village === p.village) {
+                  const key = `holder_${people[j].name}_${people[j].village}`;
+                  if (groups[key]) {
+                    groups[key].push(i);
+                    break;
+                  }
+                }
+              }
+              if (!groups[`holder_${p.name}_${p.village}`]?.includes(i)) {
+                const key = `${p.name}_${p.village}_${p.address}`;
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(i);
+              }
+            }
+          }
+          let householdCount = 0;
+          Object.keys(groups).forEach(key => {
+            const indices = groups[key];
+            if (indices.length > 0) {
+              const householdId = `HK${String(Date.now()).slice(-8)}${String(householdCount).padStart(3, '0')}`;
+              indices.forEach(idx => {
+                people[idx].householdId = householdId;
+              });
+              householdCount++;
+            }
+          });
+        }
+        async function confirmImport() {
+          if (previewData.value.length === 0) return;
+          try {
+            importing.value = true;
+            const existingPeople = await db.getItem('people') || [];
+            const existingIds = new Set(existingPeople.map(p => p.id));
+            let successCount = 0, skipCount = 0;
+            const newPeople = [];
+            previewData.value.forEach(p => {
+              if (existingIds.has(p.id)) {
+                skipCount++;
+              } else {
+                const tags = Array.isArray(p.tags) ? p.tags : [];
+                newPeople.push({
+                  name: p.name, id: p.id, gender: p.gender,
+                  ethnicity: p.ethnicity || '汉族', birthDate: p.birthDate,
+                  village: p.village, address: p.address, phone: p.phone,
+                  relationToHolder: p.relationToHolder, householdId: p.householdId,
+                  tags, medicalInsurance: false, pensionInsurance: false,
+                  createdAt: new Date().toISOString(), creator: currentUser.value
+                });
+                existingIds.add(p.id);
+                successCount++;
+              }
+            });
+            await db.setItem('people', [...existingPeople, ...newPeople]);
+            await updateHouseholds();
+            importing.value = false;
+            importResult.value = { success: true, successCount, skipCount };
+            previewData.value = [];
+            await loadAllData();
+          } catch (e) {
+            importing.value = false;
+            showToast('导入失败', 'fail');
+          }
+        }
         async function updateHouseholds() { const people = await db.getItem('people') || []; const householdsMap = {}; people.forEach(p => { if (p.householdId) { if (!householdsMap[p.householdId]) { householdsMap[p.householdId] = { id: p.householdId, holderName: '', village: p.village, members: [], tags: [] }; } householdsMap[p.householdId].members.push(p.id); if (p.tags) householdsMap[p.householdId].tags = [...new Set([...householdsMap[p.householdId].tags, ...p.tags])]; if (p.relationToHolder === '本人') householdsMap[p.householdId].holderName = p.name; } }); await db.setItem('households', Object.values(householdsMap)); }
         function resetImport() { importResult.value = null; previewData.value = []; if (fileInput.value) fileInput.value.value = ''; }
         async function submitManual() { try { const existingPeople = await db.getItem('people') || []; if (existingPeople.some(p => p.id === manualForm.id)) { showToast('该身份证号已存在', 'fail'); return; } const householdId = `HK${String(Date.now()).slice(-8)}001`; const newPerson = { ...manualForm, householdId, tags: [], medicalInsurance: false, pensionInsurance: false, createdAt: new Date().toISOString(), creator: currentUser.value }; await db.setItem('people', [...existingPeople, newPerson]); await updateHouseholds(); Object.keys(manualForm).forEach(k => manualForm[k] = ''); manualForm.relationToHolder = '本人'; showToast('保存成功'); await loadAllData(); } catch (e) { showToast('保存失败', 'fail'); } }
